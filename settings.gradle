@@ -9,6 +9,4 @@ pluginManagement {
 
 rootProject.name = 'pomkotsmechs'
 
-include 'common'
-include 'fabric'
 include 'forge'
