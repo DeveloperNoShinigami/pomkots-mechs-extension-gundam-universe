@@ -9,6 +9,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.entity.vehicle.equipment.action.Action
 import grcmcs.minecraft.mods.pomkotsmechs.entity.vehicle.equipment.action.ActionController;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.PomkotsMechsExtension;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -34,15 +35,12 @@ import java.util.List;
 public abstract class PmgBaseEntity extends PomkotsVehicleBase {
     public static final float DEFAULT_SCALE = 1.0f;
 
+    protected int energy = CombatBalance.BASE_ENERGY;
+    private boolean energyInitialized = false;
+
     @Override
     protected String getMechName() {
         return "base";
-    }
-
-    @Override
-    protected boolean useEnergy(int dec) {
-        dec = dec * 2;
-        return super.useEnergy(dec);
     }
 
     @Override
@@ -61,6 +59,11 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
 
     @Override
     public void tick() {
+        if (!energyInitialized) {
+            energy = getMaxEnergy();
+            energyInitialized = true;
+        }
+
         super.tick();
 
         if (this.onGround()) {
@@ -76,6 +79,37 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
         }
         previousMode = this.isMainMode();
         previousOnground = this.onGround();
+    }
+
+    @Override
+    public int getEnergy() {
+        return energy;
+    }
+
+    protected int getMaxEnergy() {
+        return (int) this.getAttributeValue(ModAttributes.MECH_ENERGY.get());
+    }
+
+    @Override
+    protected void chargeEnergy() {
+        int max = getMaxEnergy();
+        if (energy > max) {
+            energy = max;
+        } else if (energy < max) {
+            energy = Math.min(max, energy + 2);
+        }
+    }
+
+    @Override
+    protected boolean useEnergy(int dec) {
+        // innate modifier: base class doubles the requested energy cost
+        dec = Math.round(dec * CombatBalance.ENERGY_COST_MULTIPLIER);
+        if (energy - dec < 0) {
+            energy = 0;
+            return false;
+        }
+        energy -= dec;
+        return true;
     }
 
     protected void handleCollisionWithProjectiles() {
@@ -229,11 +263,20 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
             if (this.forwardIntention == 0.0F && this.sidewayIntention == 0.0F) {
                 vel = new Vec3(0.0, 0.0, 1.0);
             } else {
-                vel = (new Vec3((double)this.sidewayIntention, 0.0, (double)this.forwardIntention)).normalize();
+                vel = (new Vec3((double) this.sidewayIntention, 0.0, (double) this.forwardIntention)).normalize();
             }
 
-            vel = vel.yRot((float)Math.toRadians(-1.0 * (double)this.getYRot()));
-            double distance = getEvasionSpeed();
+            vel = vel.yRot((float) Math.toRadians(-1.0 * (double) this.getYRot()));
+            double distance;
+            if (this.sidewayIntention < 0) {
+                distance = getEvasionRightSpeed();
+            } else if (this.sidewayIntention > 0) {
+                distance = getEvasionLeftSpeed();
+            } else if (this.forwardIntention != 0.0F) {
+                distance = getDashSpeed();
+            } else {
+                distance = getDashSideSpeed();
+            }
             vel = vel.scale(distance);
             this.push(vel.x, vel.y, vel.z);
         }
@@ -268,16 +311,28 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
         }
     }
 
-    protected float getEvasionSpeed() {
-        return 7.125F;
+    protected float getDashSpeed() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_DASH_SPEED.get());
+    }
+
+    protected float getDashSideSpeed() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_DASH_SIDE_SPEED.get());
+    }
+
+    protected float getEvasionLeftSpeed() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_EVASION_LEFT_SPEED.get());
+    }
+
+    protected float getEvasionRightSpeed() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_EVASION_RIGHT_SPEED.get());
     }
 
     protected float getJumpInitialSpped() {
-        return 2.0F;
+        return (float) this.getAttributeValue(ModAttributes.MECH_JUMP_POWER.get());
     }
 
     protected float getJumpContinueSpped() {
-        return 0.7F;
+        return getJumpInitialSpped() * CombatBalance.JUMP_CONTINUE_MULTIPLIER;
     }
 
     protected abstract void applyPlayerInputWeaponsMainMode(DriverInput driverInput);
@@ -312,8 +367,28 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
         return new float[]{(float)xRot, (float)yRot};
     }
 
+    protected float getBeamDamage() {
+        // flat base attribute value before any innate modifiers
+        return (float) this.getAttributeValue(ModAttributes.MECH_BEAM_DAMAGE.get());
+    }
+
+    protected float getMissileDamage() {
+        // flat base attribute value before any innate modifiers
+        return (float) this.getAttributeValue(ModAttributes.MECH_MISSILE_DAMAGE.get());
+    }
+
+    protected float getMachineGunDamage() {
+        // flat base attribute value before any innate modifiers
+        return (float) this.getAttributeValue(ModAttributes.MECH_MACHINEGUN_DAMAGE.get());
+    }
+
+    protected float getSaberDamage() {
+        // flat base attribute value before any innate modifiers
+        return (float) this.getAttributeValue(ModAttributes.MECH_SABER_DAMAGE.get());
+    }
+
     protected void fireSaber(Level level) {
-        this.fireSaber(level, CombatBalance.BASE_DAMAGE_SABER);
+        this.fireSaber(level, getSaberDamage());
     }
 
     protected void fireSaber(Level level, float damage) {
