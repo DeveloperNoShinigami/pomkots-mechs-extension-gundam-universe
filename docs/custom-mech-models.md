@@ -179,4 +179,3 @@ Modifier operations:
 **Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, and the weapon constants in `CombatBalance` for base damage and projectile speed.  An internal energy gauge is consumed by boosts and weapons.
 
 **Vanilla attributes** – `MAX_HEALTH`, `ATTACK_KNOCKBACK`, `KNOCKBACK_RESISTANCE` and any other `Attribute` supported by Minecraft can be attached to mechs for further tuning.
-
