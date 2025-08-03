@@ -1,104 +1,113 @@
 # Custom Mech Model Guide
 
-The extension uses [GeckoLib](https://geckolib.com/) to animate mechs. New models can be added without modifying the base mod.
+The extension relies on [GeckoLib](https://geckolib.com/) for all model and animation work.  This guide walks through creating a new mech, wiring every attack animation shipped with the mod, and tuning attributes with modifiers.
 
-## 1. Create model files
+## 1. Resource setup
 
-Place your resources under `src/main/resources/assets/pomkotsmechsextension` in the Forge module.
+Store resources in the Forge module at `src/main/resources/assets/pomkotsmechsextension`:
 
-- `geo/<model_name>.geo.json` – geometry exported from Blockbench.
-- `animations/<model_name>.animation.json` – GeckoLib animation definitions.
-- `textures/entity/<model_name>.png` – texture for the mech.
+| Path | Description |
+|------|-------------|
+| `geo/<model_name>.geo.json` | geometry exported from Blockbench |
+| `animations/<model_name>.animation.json` | GeckoLib animation file |
+| `textures/entity/<model_name>.png` | model texture |
 
-## 2. Implement the model class
+Example `animations/my_mech.animation.json` skeleton containing all attack clips:
 
-Create a class that extends `GeoModel` similar to `Pmac01EntityModel` (e.g.
-`src/main/java/<your package>/client/model/MyMechModel.java`):
+```json
+{
+  "animations": {
+    "shoot": {}, "shootUpperBody": {},
+    "shoot1": {}, "shoot2": {}, "shoot1_upper": {}, "shoot2_upper": {},
+    "shootL1": {}, "shootL2": {}, "shootL1_upper": {}, "shootL2_upper": {},
+    "saber": {}, "saberUpperBody": {},
+    "saber1": {}, "saber2": {}, "saber3": {},
+    "saber1_upper": {}, "saber2_upper": {}, "saber3_upper": {},
+    "bazooka": {}, "bazooka_upper": {},
+    "missile": {}, "missileUpperBody": {},
+    "gatling1": {}, "gatling2": {},
+    "vz": {}, "vz_upper": {}
+  }
+}
+```
+
+## 2. Model class
+
+Create `src/main/java/<your package>/client/model/MyMechModel.java`:
 
 ```java
 public class MyMechModel extends GeoModel<MyMechEntity> {
-    @Override
-    public ResourceLocation getModelResource(MyMechEntity animatable) {
-        return new ResourceLocation(PomkotsMechsExtension.MODID, "geo/my_mech.geo.json");
-    }
+    private static final ResourceLocation GEO = new ResourceLocation(PomkotsMechsExtension.MODID, "geo/my_mech.geo.json");
+    private static final ResourceLocation TEX = new ResourceLocation(PomkotsMechsExtension.MODID, "textures/entity/my_mech.png");
+    private static final ResourceLocation ANIM = new ResourceLocation(PomkotsMechsExtension.MODID, "animations/my_mech.animation.json");
 
     @Override
-    public ResourceLocation getTextureResource(MyMechEntity animatable) {
-        return new ResourceLocation(PomkotsMechsExtension.MODID, "textures/entity/my_mech.png");
-    }
+    public ResourceLocation getModelResource(MyMechEntity animatable) { return GEO; }
 
     @Override
-    public ResourceLocation getAnimationResource(MyMechEntity animatable) {
-        return new ResourceLocation(PomkotsMechsExtension.MODID, "animations/my_mech.animation.json");
-    }
+    public ResourceLocation getTextureResource(MyMechEntity animatable) { return TEX; }
+
+    @Override
+    public ResourceLocation getAnimationResource(MyMechEntity animatable) { return ANIM; }
 }
 ```
 
-## 3. Create a renderer
+## 3. Renderer
 
-Implement a renderer extending `GeoEntityRenderer`. The renderer wires your
-model class to Minecraft's rendering system and can tweak shadows or render
-layers. Place it under something like
-`src/main/java/<your package>/client/renderer/MyMechRenderer.java`:
+Place a renderer under `src/main/java/<your package>/client/renderer/MyMechRenderer.java`:
 
 ```java
 public class MyMechRenderer extends GeoEntityRenderer<MyMechEntity> {
-    public MyMechRenderer(EntityRendererProvider.Context context) {
-        super(context, new MyMechModel());
-        this.shadowRadius = 0.7F; // optional shadow size
+    public MyMechRenderer(EntityRendererProvider.Context ctx) {
+        super(ctx, new MyMechModel());
+        this.shadowRadius = 0.7F; // tweak shadow size if desired
     }
 }
 ```
 
-This mirrors the existing `Pmac01EntityRenderer` shipped with the mod.
+## 4. Entity registration
 
-## 4. Register the entity and renderer
-
-Declare a `RegistrySupplier` for your mech (e.g.
-`src/main/java/<your package>/entity/vehicle/MyMechEntity.java`) and hook its
-attributes during mod initialization. The `PomkotsMechsExtension` class shows
-the same pattern for built‑in mechs:
+Entity classes live in `entity/vehicle`.  Register the type and its attributes:
 
 ```java
-public static final RegistrySupplier<EntityType<MyMechEntity>> MY_MECH =
-    registerEntityType("my_mech", MyMechEntity::new, MobCategory.CREATURE, 4F, 10F);
+public class ModEntities {
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(MODID, Registries.ENTITY_TYPE);
 
-public static void initialize() {
-    ENTITIES.register();
-    EntityAttributeRegistry.register(MY_MECH::get, MyMechEntity::createMobAttributes);
+    public static final RegistrySupplier<EntityType<MyMechEntity>> MY_MECH =
+        ENTITIES.register("my_mech", () -> EntityType.Builder.of(MyMechEntity::new, MobCategory.CREATURE)
+            .sized(4F, 10F).build("my_mech"));
+
+    public static void init() {
+        ENTITIES.register();
+        EntityAttributeRegistry.register(MY_MECH::get, MyMechEntity::createMobAttributes);
+    }
 }
 ```
 
-On the client side register the renderer:
+Client‑side renderer hook:
 
 ```java
-EntityRendererRegistry.register(PomkotsMechsExtension.MY_MECH,
-    context -> new MyMechRenderer(context));
+EntityRendererRegistry.register(ModEntities.MY_MECH.get(), MyMechRenderer::new);
 ```
 
-With these steps your custom mech will render using your GeckoLib model, texture, and animations.
+## 5. Weapon and item registration
 
-## 5. Register weapons and items
-
-Weapon classes usually live under `src/main/java/<your package>/items`. Each needs a
-JSON model in `src/main/resources/assets/<modid>/models/item` and a texture in
-`textures/item`.
+Items usually sit in `src/main/java/<your package>/item` with resources under `assets/<modid>`:
 
 ```java
-public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(MODID, Registries.ITEM);
+public class ModItems {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MODID, Registries.ITEM);
 
-public static final RegistrySupplier<Item> BEAM_RIFLE = ITEMS.register(
-    "beam_rifle", () -> new BeamRifleItem(new Item.Properties().stacksTo(1)));
+    public static final RegistrySupplier<Item> BEAM_RIFLE = ITEMS.register("beam_rifle",
+        () -> new BeamRifleItem(new Item.Properties().stacksTo(1)));
 
-public static void initialize() {
-    ITEMS.register();
+    public static void init() { ITEMS.register(); }
 }
 ```
 
-## 6. Wire combat actions and attack animations
+## 6. Combat actions and attack animations
 
-A mech's attacks are controlled by an `ActionController` and tied to GeckoLib animations. In your entity class, register the actions you want to support:
+Actions are identified by IDs and mapped to GeckoLib keys of the form `animation.<mech_name>.<key>`:
 
 ```java
 protected static final int ACT_SHOOT = 7;
@@ -108,74 +117,65 @@ protected static final int ACT_SABER = 8;
 
 @Override
 protected void registerCombatActions() {
-    this.actionController.registerAction(ACT_SHOOT, new Action(20, 10, 10), ActionController.ActionType.R_ARM_MAIN);
-    this.actionController.registerAction(ACT_SABER, new Action(60, 11, 9), ActionController.ActionType.L_ARM_MAIN);
-    // additional actions...
+    actionController.registerAction(ACT_SHOOT, new Action(20, 10, 10), ActionController.ActionType.R_ARM_MAIN);
+    actionController.registerAction(ACT_SABER, new Action(60, 11, 9), ActionController.ActionType.L_ARM_MAIN);
+    // add gatling, bazooka, etc.
 }
-```
 
-Input handlers start these actions and an animation controller selects the matching animation key:
-
-```java
 controllers.add(new AnimationController<>(this, "attack", 2, event -> {
-    if (this.actionController.getAction(ACT_SHOOT).isInAction()) {
+    if (actionController.getAction(ACT_SHOOT).isInAction()) {
         return event.setAndContinue(RawAnimation.begin().thenPlay("animation." + getMechName() + ".shoot"));
-    } else if (this.actionController.getAction(ACT_SABER).isInAction()) {
+    }
+    if (actionController.getAction(ACT_SABER).isInAction()) {
         return event.setAndContinue(RawAnimation.begin().thenPlay("animation." + getMechName() + ".saber1"));
     }
     return event.setAndContinue(RawAnimation.begin().thenPlayAndHold("animation." + getMechName() + ".nop"));
 }));
 ```
 
-The mod ships a wide set of attack animations. Reference them with the pattern
-`animation.<mech_name>.<key>` in both your animation files and entity code.
-All available keys are:
+### Attack key reference
 
-| Weapon/Action | Animation keys |
-|---------------|----------------|
+| Weapon | Animation keys |
+|--------|----------------|
 | Beam rifle | `shoot`, `shootUpperBody` |
 | Dual beam rifles | `shoot1`, `shoot2`, `shoot1_upper`, `shoot2_upper`, `shootL1`, `shootL2`, `shootL1_upper`, `shootL2_upper` |
-| Beam saber (simple) | `saber`, `saberUpperBody` |
-| Beam saber combo | `saber1`, `saber2`, `saber3` and their `_upper` variants |
+| Beam saber | `saber`, `saberUpperBody`, `saber1`, `saber2`, `saber3`, `saber1_upper`, `saber2_upper`, `saber3_upper` |
 | Bazooka | `bazooka`, `bazooka_upper` |
 | Missile | `missile`, `missileUpperBody` |
-| Gatling gun | `gatling1` (spin‑up), `gatling2` (loop) |
+| Gatling gun | `gatling1` (spin up), `gatling2` (loop) |
 | Vulcan guns | `vz`, `vz_upper` |
 
-Use whichever keys your mech supports when wiring the `ActionController` and animation controller.
+Define any key you use in `my_mech.animation.json` and return the matching name in `RawAnimation` calls.
 
-## 7. Tuning stats with attributes
+## 7. Extra mech abilities
 
-Define mech stats using Minecraft attributes. Start with a base value and apply
-modifiers to adjust them dynamically. Typical mech stats include movement speed,
-attack damage, armor and knockback resistance:
+Base classes expose additional hooks such as `dash`, `dash_side`, `evasion_left`, `evasion_right`, `jump`, `cockpit_open`, and `cockpit_close`.  Actions can consume the energy gauge maintained by `PomkotsVehicleBase` to balance these moves.
+
+## 8. Attributes and modifiers
+
+Mech stats are attributes with base values and optional modifiers:
 
 ```java
 public static AttributeSupplier.Builder createMobAttributes() {
     return createLivingAttributes()
+        .add(Attributes.MAX_HEALTH, BattleBalance.BASE_HEALTH)
         .add(Attributes.ATTACK_KNOCKBACK)
-        .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
-        .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.6);
+        .add(Attributes.KNOCKBACK_RESISTANCE, 0.8);
 }
+
+// temporary speed buff
+getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(
+    new AttributeModifier("dash_boost", 0.25, AttributeModifier.Operation.MULTIPLY_TOTAL));
 ```
 
-Attributes support modifier operations:
+Modifier operations:
 
-- `ADDITION` – flat bonuses, e.g., +5 max health
-- `MULTIPLY_BASE` – multiplies the base before other modifiers
-- `MULTIPLY_TOTAL` – multiplies the final value after all other modifiers
+* **ADDITION** – flat bonus, e.g. `+5` health
+* **MULTIPLY_BASE** – multiplies the starting value before other modifiers
+* **MULTIPLY_TOTAL** – multiplies the result after all modifiers
 
-Example applying a temporary speed boost modifier:
+## 9. Attribute reference
 
-```java
-this.getAttribute(Attributes.MOVEMENT_SPEED)
-    .addTransientModifier(new AttributeModifier("dash_boost", 0.25, AttributeModifier.Operation.MULTIPLY_TOTAL));
-```
+**Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, and the weapon constants in `CombatBalance` for base damage and projectile speed.  An internal energy gauge is consumed by boosts and weapons.
 
-Beyond raw numbers, the `ActionController` maintains status flags (dash, jump,
-evasion, etc.) which your code can check to gate abilities or switch
-animations.
-
-## 8. Additional features
-
-Base mech classes expose extra actions such as jumps, dashes, evasion slides, mounting and cockpit sequences. The controller checks the current action and plays the matching animation (e.g. `dash`, `dash_side`, `evasion_left`, `cockpit_open`). These hooks let you add boosts, open/close cockpits, mount/dismount procedures or other movement abilities alongside your weapon animations.
+**Vanilla attributes** – `MAX_HEALTH`, `ATTACK_KNOCKBACK`, `KNOCKBACK_RESISTANCE` and any other `Attribute` supported by Minecraft can be attached to mechs for further tuning.
