@@ -39,6 +39,7 @@ public class Pmac01cEntity extends Pmac01Entity {
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 8F)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 8F)
                 .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
+
     }
 
     public Pmac01cEntity(EntityType<? extends LivingEntity> entityType, Level world) {

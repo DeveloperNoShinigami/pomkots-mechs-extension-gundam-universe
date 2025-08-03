@@ -215,3 +215,4 @@ Other useful vanilla stats include `MOVEMENT_SPEED`, `FLYING_SPEED`, `ARMOR`,
 `ARMOR_TOUGHNESS`, `ATTACK_DAMAGE`, `ATTACK_SPEED`, `LUCK`, `SWIM_SPEED`, and
 `JUMP_STRENGTH` which can be combined with modifiers to further customize mech
 behavior.
+

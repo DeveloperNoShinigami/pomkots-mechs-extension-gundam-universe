@@ -104,6 +104,7 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
     protected boolean useEnergy(int dec) {
         // innate modifier: base class doubles the requested energy cost
         dec = Math.round(dec * CombatBalance.ENERGY_COST_MULTIPLIER);
+
         if (energy - dec < 0) {
             energy = 0;
             return false;
@@ -369,21 +370,25 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
 
     protected float getBeamDamage() {
         // flat base attribute value before any innate modifiers
+
         return (float) this.getAttributeValue(ModAttributes.MECH_BEAM_DAMAGE.get());
     }
 
     protected float getMissileDamage() {
         // flat base attribute value before any innate modifiers
+
         return (float) this.getAttributeValue(ModAttributes.MECH_MISSILE_DAMAGE.get());
     }
 
     protected float getMachineGunDamage() {
         // flat base attribute value before any innate modifiers
+
         return (float) this.getAttributeValue(ModAttributes.MECH_MACHINEGUN_DAMAGE.get());
     }
 
     protected float getSaberDamage() {
         // flat base attribute value before any innate modifiers
+
         return (float) this.getAttributeValue(ModAttributes.MECH_SABER_DAMAGE.get());
     }
 

@@ -101,6 +101,7 @@ public class Pmac01Entity extends PmaBaseEntity {
             // innate modifier: bullet deals two-thirds of the beam attribute
             BulletLargeEntity be = new BulletLargeEntity(PomkotsMechsExtension.BULLETLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.DAMAGE_MODIFIER));
 
+
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
             // なんかaddVelocity周りが悪さしてる…？
@@ -123,6 +124,7 @@ public class Pmac01Entity extends PmaBaseEntity {
         if (!level.isClientSide()) {
             // innate modifier: gatling bullets use two-thirds of the machine gun attribute
             MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, (int)(getMachineGunDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -162,6 +164,7 @@ public class Pmac01Entity extends PmaBaseEntity {
                 // innate modifier: missiles fire at two-thirds of the missile attribute
                 MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
 
+
                 be.setPos(offset.add(worldMuzzlPos));
 
                 be.shootFromRotation(be, -10, this.getYRot(), this.getFallFlyingTicks(), CombatBalance.BASE_SPEED_MISSILE, 0F);
@@ -184,6 +187,7 @@ public class Pmac01Entity extends PmaBaseEntity {
 
             // innate modifier: missiles fire at two-thirds of the missile attribute
             MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
             be.setPos(offset.add(worldMuzzlPos));
 

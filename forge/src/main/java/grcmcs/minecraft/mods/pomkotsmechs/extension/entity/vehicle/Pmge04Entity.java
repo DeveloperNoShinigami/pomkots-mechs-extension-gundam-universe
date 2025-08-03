@@ -51,6 +51,7 @@ public class Pmge04Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), CombatBalance.BASE_EVASION_LEFT_SPEED)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), CombatBalance.BASE_EVASION_RIGHT_SPEED)
                 .add(ModAttributes.MECH_JUMP_POWER.get(), CombatBalance.BASE_JUMP_SPEED);
+
     }
 
     public Pmge04Entity(EntityType<? extends LivingEntity> entityType, Level world) {

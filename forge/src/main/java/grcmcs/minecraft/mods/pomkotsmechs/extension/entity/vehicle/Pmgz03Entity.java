@@ -43,6 +43,7 @@ public class Pmgz03Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 10F)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 10F)
                 .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
+
     }
 
     public Pmgz03Entity(EntityType<? extends LivingEntity> entityType, Level world) {
