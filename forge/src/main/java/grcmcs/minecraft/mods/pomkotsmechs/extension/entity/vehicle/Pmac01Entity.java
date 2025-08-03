@@ -8,6 +8,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.entity.vehicle.equipment.action.Action
 import grcmcs.minecraft.mods.pomkotsmechs.extension.PomkotsMechsExtension;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.*;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,20 @@ public class Pmac01Entity extends PmaBaseEntity {
         return createLivingAttributes()
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.3);
+                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.3)
+                .add(ModAttributes.MECH_BEAM_DAMAGE.get(), CombatBalance.BASE_DAMAGE_BEAM)
+                .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
+                .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
+                .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY)
+                .add(ModAttributes.MECH_DASH_SPEED.get(), 2.5F)
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 2.5F)
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 8F)
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 8F)
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), CombatBalance.BASE_JUMP_SUSTAIN_MULTIPLIER)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmac01Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -87,7 +101,8 @@ public class Pmac01Entity extends PmaBaseEntity {
 
     private void fireShoot(Level level) {
         if (!level.isClientSide()) {
-            BulletLargeEntity be = new BulletLargeEntity(PomkotsMechsExtension.BULLETLARGE.get(), level, this, CombatBalance.BASE_DAMAGE_BEAM * 2 / 3);
+            // innate modifier: bullet deals two-thirds of the beam attribute
+            BulletLargeEntity be = new BulletLargeEntity(PomkotsMechsExtension.BULLETLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.DAMAGE_MODIFIER));
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -109,7 +124,8 @@ public class Pmac01Entity extends PmaBaseEntity {
 
     private void fireGatling(Level level) {
         if (!level.isClientSide()) {
-            MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, CombatBalance.BASE_DAMAGE_MACHINEGUN * 2 / 3);
+            // innate modifier: gatling bullets use two-thirds of the machine gun attribute
+            MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, (int)(getMachineGunDamage() * CombatBalance.DAMAGE_MODIFIER));
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -146,7 +162,8 @@ public class Pmac01Entity extends PmaBaseEntity {
             for (int i = 0; i < 4; i++) {
                 var worldMuzzlPos = muzzlPos.add(1 * (i / 2 - 0.5),1 * (i % 2),0).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, CombatBalance.BASE_DAMAGE_MISSILE * 2 / 3);
+                // innate modifier: missiles fire at two-thirds of the missile attribute
+                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
 
                 be.setPos(offset.add(worldMuzzlPos));
 
@@ -168,7 +185,8 @@ public class Pmac01Entity extends PmaBaseEntity {
             var muzzlPos = new Vec3(1.3F, 18F/2, 2F/2);
             var worldMuzzlPos = muzzlPos.add(1 * (slot / 3),0,-2 - ((slot % 3) * 1)).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-            MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, CombatBalance.BASE_DAMAGE_MISSILE * 2 / 3);
+            // innate modifier: missiles fire at two-thirds of the missile attribute
+            MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
 
             be.setPos(offset.add(worldMuzzlPos));
 
@@ -245,22 +263,4 @@ public class Pmac01Entity extends PmaBaseEntity {
     }
 
     @Override
-    protected float getRunSpeed() {
-        return 2.5F;
-    }
-
-    @Override
-    protected float getEvasionSpeed() {
-        return 8F;
-    }
-
-    @Override
-    protected float getJumpInitialSpped() {
-        return 3.5F;
-    }
-
-    @Override
-    protected float getJumpContinueSpped() {
-        return 1F;
-    }
 }

@@ -8,6 +8,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamLargeEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -24,7 +25,20 @@ public class Pmge03Entity extends PmgBaseEntity {
         return createLivingAttributes()
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.75);
+                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.75)
+                .add(ModAttributes.MECH_BEAM_DAMAGE.get(), CombatBalance.BASE_DAMAGE_BEAM)
+                .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
+                .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
+                .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY)
+                .add(ModAttributes.MECH_DASH_SPEED.get(), 1.7F)
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 1.7F)
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 10F)
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 10F)
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), 2F / 3.5F)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmge03Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -77,7 +91,7 @@ public class Pmge03Entity extends PmgBaseEntity {
     private void fireShoot(Level level) {
         if (!level.isClientSide()) {
             for (int i = 0; i < 2; i++) {
-                BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this);
+                BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this, (int)getBeamDamage());
 
                 // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
                 // ので、3tick前の座標をオフセットにする
@@ -101,7 +115,8 @@ public class Pmge03Entity extends PmgBaseEntity {
     private void fireBazooka(Level level) {
         if (!level.isClientSide()) {
             for (int i = 0; i < 3; i+=2) {
-                BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this);
+                // innate modifier: large beam doubles the beam attribute
+                BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.LARGE_BEAM_DAMAGE_MULTIPLIER));
 
                 // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
                 // ので、3tick前の座標をオフセットにする
@@ -139,7 +154,7 @@ public class Pmge03Entity extends PmgBaseEntity {
             for (int i = 0; i < 6; i++) {
                 var worldMuzzlPos = muzzlPos.add(4.5 * (i / 3 - 0.5),1 * (i % 3),0).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null);
+                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage());
 
                 be.setPos(offset.add(worldMuzzlPos));
 
@@ -210,23 +225,4 @@ public class Pmge03Entity extends PmgBaseEntity {
         }));
     }
 
-    @Override
-    protected float getRunSpeed() {
-        return 1.7F;
-    }
-
-    @Override
-    protected float getEvasionSpeed() {
-        return 10F;
-    }
-
-    @Override
-    protected float getJumpInitialSpped() {
-        return 3.5F;
-    }
-
-    @Override
-    protected float getJumpContinueSpped() {
-        return 2F;
-    }
 }

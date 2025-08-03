@@ -168,6 +168,41 @@ getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(
     new AttributeModifier("dash_boost", 0.25, AttributeModifier.Operation.MULTIPLY_TOTAL));
 ```
 
+The extension also registers weapon-specific attributes and an energy gauge so
+their values can be inspected and changed through the `/attribute` command:
+
+| Attribute | Purpose |
+|-----------|---------|
+| `pomkotsmechsextension:mech_beam_damage` | Base damage for beam projectiles |
+| `pomkotsmechsextension:mech_machinegun_damage` | Damage dealt by gatling bullets |
+| `pomkotsmechsextension:mech_missile_damage` | Damage for missile explosions |
+| `pomkotsmechsextension:mech_saber_damage` | Melee damage for sabers and piles |
+| `pomkotsmechsextension:mech_energy` | Maximum capacity of the internal energy gauge |
+| `pomkotsmechsextension:mech_dash_speed` | Forward dash speed used when evading straight ahead |
+| `pomkotsmechsextension:mech_dash_side_speed` | Lateral dash speed when evading without forward input |
+| `pomkotsmechsextension:mech_evasion_left_speed` | Distance covered by left evasion hops |
+| `pomkotsmechsextension:mech_evasion_right_speed` | Distance covered by right evasion hops |
+| `pomkotsmechsextension:mech_jump_power` | Initial jump velocity before the sustain multiplier |
+| `pomkotsmechsextension:mech_jump_sustain` | Portion of jump power reapplied each tick while the jump key is held |
+| `pomkotsmechsextension:mech_pilot_accuracy` | Multiplier applied to AI projectile spread; higher values mean tighter aim |
+| `pomkotsmechsextension:mech_pilot_reaction` | Multiplier that scales AI reaction and attack delays |
+
+Pilot attributes control how effectively AI pilots handle their suits, enabling custom precision or sluggishness for hostile mechs.
+
+Movement entries behave like their weapon counterparts—the base value is
+read directly from the attribute and game logic multiplies it when
+necessary. Sustained jumping, for example, multiplies `mech_jump_power`
+by `mech_jump_sustain` each tick the jump key is held.
+
+These attributes hold the flat base values for each mech.  Attack logic then
+applies innate modifiers internally—for example most projectiles and saber
+swings use two‑thirds of their attribute value, large beam shots double the
+beam attribute, and energy costs are doubled (with aerial units applying an
+additional two‑thirds reduction before the doubling).
+
+Like vanilla attributes these support the three modifier operations above, so
+addons can apply flat bonuses or multiplicative boosts.
+
 Modifier operations:
 
 * **ADDITION** – flat bonus, e.g. `+5` health
@@ -176,6 +211,11 @@ Modifier operations:
 
 ## 9. Attribute reference
 
-**Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, and the weapon constants in `CombatBalance` for base damage and projectile speed.  An internal energy gauge is consumed by boosts and weapons.
+**Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, the weapon constants in `CombatBalance` for base damage and projectile speed, and pilot fields like `MECH_PILOT_ACCURACY` and `MECH_PILOT_REACTION` for AI behaviour.  `MECH_ENERGY` controls the size of the internal gauge consumed by boosts and weapons.
 
 **Vanilla attributes** – `MAX_HEALTH`, `ATTACK_KNOCKBACK`, `KNOCKBACK_RESISTANCE` and any other `Attribute` supported by Minecraft can be attached to mechs for further tuning.
+
+Other useful vanilla stats include `MOVEMENT_SPEED`, `FLYING_SPEED`, `ARMOR`,
+`ARMOR_TOUGHNESS`, `ATTACK_DAMAGE`, `ATTACK_SPEED`, `LUCK`, `SWIM_SPEED`, and
+`JUMP_STRENGTH` which can be combined with modifiers to further customize mech
+behavior.

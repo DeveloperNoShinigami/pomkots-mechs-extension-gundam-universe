@@ -9,6 +9,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamLargeEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MachineGunBulletEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,7 +33,20 @@ public class Pmgz02Entity extends PmgBaseEntity {
         return createLivingAttributes()
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.4);
+                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.4)
+                .add(ModAttributes.MECH_BEAM_DAMAGE.get(), CombatBalance.BASE_DAMAGE_BEAM)
+                .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
+                .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
+                .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY)
+                .add(ModAttributes.MECH_DASH_SPEED.get(), 2F)
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 2F)
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), CombatBalance.BASE_EVASION_LEFT_SPEED)
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), CombatBalance.BASE_EVASION_RIGHT_SPEED)
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), CombatBalance.BASE_JUMP_SUSTAIN_MULTIPLIER)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), CombatBalance.BASE_JUMP_SPEED)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmgz02Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -88,13 +102,13 @@ public class Pmgz02Entity extends PmgBaseEntity {
         } else if (actionController.getAction(ACT_SABER).isOnFire()
                 || actionController.getAction(ACT_SABER2).isOnFire()
                 || actionController.getAction(ACT_SABER3).isOnFire()) {
-            this.fireSaber(level, CombatBalance.BASE_DAMAGE_SABER * 1.5F);
+            this.fireSaber(level, getSaberDamage() * 1.5F);
         }
     }
 
     private void fireShoot(Level level) {
         if (!level.isClientSide()) {
-            MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this);
+            MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, (int)getMachineGunDamage());
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -216,7 +230,4 @@ public class Pmgz02Entity extends PmgBaseEntity {
     }
 
     @Override
-    protected float getRunSpeed() {
-        return 2F;
-    }
 }
