@@ -32,6 +32,26 @@ public class ModAttributes {
             () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_energy",
                     CombatBalance.BASE_ENERGY, 0.0D, 2048.0D).setSyncable(true));
 
+    public static final RegistrySupplier<Attribute> MECH_DASH_SPEED = ATTRIBUTES.register("mech_dash_speed",
+            () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_dash_speed",
+                    CombatBalance.BASE_DASH_SPEED, 0.0D, 1024.0D).setSyncable(true));
+
+    public static final RegistrySupplier<Attribute> MECH_DASH_SIDE_SPEED = ATTRIBUTES.register("mech_dash_side_speed",
+            () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_dash_side_speed",
+                    CombatBalance.BASE_DASH_SIDE_SPEED, 0.0D, 1024.0D).setSyncable(true));
+
+    public static final RegistrySupplier<Attribute> MECH_EVASION_LEFT_SPEED = ATTRIBUTES.register("mech_evasion_left_speed",
+            () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_evasion_left_speed",
+                    CombatBalance.BASE_EVASION_LEFT_SPEED, 0.0D, 1024.0D).setSyncable(true));
+
+    public static final RegistrySupplier<Attribute> MECH_EVASION_RIGHT_SPEED = ATTRIBUTES.register("mech_evasion_right_speed",
+            () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_evasion_right_speed",
+                    CombatBalance.BASE_EVASION_RIGHT_SPEED, 0.0D, 1024.0D).setSyncable(true));
+
+    public static final RegistrySupplier<Attribute> MECH_JUMP_POWER = ATTRIBUTES.register("mech_jump_power",
+            () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_jump_power",
+                    CombatBalance.BASE_JUMP_SPEED, 0.0D, 1024.0D).setSyncable(true));
+
     public static void init() {
         ATTRIBUTES.register();
     }

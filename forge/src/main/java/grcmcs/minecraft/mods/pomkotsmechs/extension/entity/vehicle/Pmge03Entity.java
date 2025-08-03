@@ -30,7 +30,13 @@ public class Pmge03Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
                 .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
                 .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
-                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY);
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY)
+                .add(ModAttributes.MECH_DASH_SPEED.get(), 1.7F)
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 1.7F)
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 10F)
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 10F)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
+
     }
 
     public Pmge03Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -107,7 +113,8 @@ public class Pmge03Entity extends PmgBaseEntity {
     private void fireBazooka(Level level) {
         if (!level.isClientSide()) {
             for (int i = 0; i < 3; i+=2) {
-                BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this, (int)(getBeamDamage() * 2));
+                // innate modifier: large beam doubles the beam attribute
+                BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.LARGE_BEAM_DAMAGE_MULTIPLIER));
 
                 // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
                 // ので、3tick前の座標をオフセットにする
@@ -217,22 +224,8 @@ public class Pmge03Entity extends PmgBaseEntity {
     }
 
     @Override
-    protected float getRunSpeed() {
-        return 1.7F;
-    }
-
-    @Override
-    protected float getEvasionSpeed() {
-        return 10F;
-    }
-
-    @Override
-    protected float getJumpInitialSpped() {
-        return 3.5F;
-    }
-
     @Override
     protected float getJumpContinueSpped() {
-        return 2F;
+        return getJumpInitialSpped() * (2F / 3.5F);
     }
 }

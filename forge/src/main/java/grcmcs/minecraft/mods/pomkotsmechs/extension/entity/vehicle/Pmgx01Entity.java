@@ -33,7 +33,13 @@ public class Pmgx01Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
                 .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
                 .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
-                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY);
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY)
+                .add(ModAttributes.MECH_DASH_SPEED.get(), 1.7F)
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 1.7F)
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), CombatBalance.BASE_EVASION_LEFT_SPEED)
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), CombatBalance.BASE_EVASION_RIGHT_SPEED)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), CombatBalance.BASE_JUMP_SPEED);
+
     }
 
     public Pmgx01Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -217,8 +223,4 @@ public class Pmgx01Entity extends PmgBaseEntity {
     }
 
     @Override
-    protected float getRunSpeed() {
-        return 1.7F;
-    }
-
 }

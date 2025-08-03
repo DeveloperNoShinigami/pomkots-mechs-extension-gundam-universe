@@ -40,7 +40,12 @@ public class Pmac01Entity extends PmaBaseEntity {
                 .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
                 .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
                 .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
-                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY);
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY)
+                .add(ModAttributes.MECH_DASH_SPEED.get(), 2.5F)
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 2.5F)
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 8F)
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 8F)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
     }
 
     public Pmac01Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -93,7 +98,9 @@ public class Pmac01Entity extends PmaBaseEntity {
 
     private void fireShoot(Level level) {
         if (!level.isClientSide()) {
-            BulletLargeEntity be = new BulletLargeEntity(PomkotsMechsExtension.BULLETLARGE.get(), level, this, (int)(getBeamDamage() * 2 / 3));
+            // innate modifier: bullet deals two-thirds of the beam attribute
+            BulletLargeEntity be = new BulletLargeEntity(PomkotsMechsExtension.BULLETLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -115,7 +122,9 @@ public class Pmac01Entity extends PmaBaseEntity {
 
     private void fireGatling(Level level) {
         if (!level.isClientSide()) {
-            MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, (int)(getMachineGunDamage() * 2 / 3));
+            // innate modifier: gatling bullets use two-thirds of the machine gun attribute
+            MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, (int)(getMachineGunDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -152,7 +161,9 @@ public class Pmac01Entity extends PmaBaseEntity {
             for (int i = 0; i < 4; i++) {
                 var worldMuzzlPos = muzzlPos.add(1 * (i / 2 - 0.5),1 * (i % 2),0).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage() * 2 / 3);
+                // innate modifier: missiles fire at two-thirds of the missile attribute
+                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
                 be.setPos(offset.add(worldMuzzlPos));
 
@@ -174,7 +185,9 @@ public class Pmac01Entity extends PmaBaseEntity {
             var muzzlPos = new Vec3(1.3F, 18F/2, 2F/2);
             var worldMuzzlPos = muzzlPos.add(1 * (slot / 3),0,-2 - ((slot % 3) * 1)).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-            MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage() * 2 / 3);
+            // innate modifier: missiles fire at two-thirds of the missile attribute
+            MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
             be.setPos(offset.add(worldMuzzlPos));
 
@@ -251,22 +264,4 @@ public class Pmac01Entity extends PmaBaseEntity {
     }
 
     @Override
-    protected float getRunSpeed() {
-        return 2.5F;
-    }
-
-    @Override
-    protected float getEvasionSpeed() {
-        return 8F;
-    }
-
-    @Override
-    protected float getJumpInitialSpped() {
-        return 3.5F;
-    }
-
-    @Override
-    protected float getJumpContinueSpped() {
-        return 1F;
-    }
 }

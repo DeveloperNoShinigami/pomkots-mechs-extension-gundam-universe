@@ -178,6 +178,23 @@ their values can be inspected and changed through the `/attribute` command:
 | `pomkotsmechsextension:mech_missile_damage` | Damage for missile explosions |
 | `pomkotsmechsextension:mech_saber_damage` | Melee damage for sabers and piles |
 | `pomkotsmechsextension:mech_energy` | Maximum capacity of the internal energy gauge |
+| `pomkotsmechsextension:mech_dash_speed` | Forward dash speed used when evading straight ahead |
+| `pomkotsmechsextension:mech_dash_side_speed` | Lateral dash speed when evading without forward input |
+| `pomkotsmechsextension:mech_evasion_left_speed` | Distance covered by left evasion hops |
+| `pomkotsmechsextension:mech_evasion_right_speed` | Distance covered by right evasion hops |
+| `pomkotsmechsextension:mech_jump_power` | Initial jump velocity before the innate sustain modifier |
+
+Movement entries behave like their weapon counterparts—the base value is
+read directly from the attribute and game logic multiplies it when
+necessary.  Sustained jumping, for example, applies an innate
+`JUMP_CONTINUE_MULTIPLIER` to `mech_jump_power` each tick the jump key is
+held.
+
+These attributes hold the flat base values for each mech.  Attack logic then
+applies innate modifiers internally—for example most projectiles and saber
+swings use two‑thirds of their attribute value, large beam shots double the
+beam attribute, and energy costs are doubled (with aerial units applying an
+additional two‑thirds reduction before the doubling).
 
 Like vanilla attributes these support the three modifier operations above, so
 addons can apply flat bonuses or multiplicative boosts.
@@ -195,5 +212,7 @@ Modifier operations:
 **Vanilla attributes** – `MAX_HEALTH`, `ATTACK_KNOCKBACK`, `KNOCKBACK_RESISTANCE` and any other `Attribute` supported by Minecraft can be attached to mechs for further tuning.
 
 Other useful vanilla stats include `MOVEMENT_SPEED`, `FLYING_SPEED`, `ARMOR`,
-`ARMOR_TOUGHNESS`, `ATTACK_DAMAGE`, `ATTACK_SPEED`, and `LUCK` which can be
-combined with modifiers to further customize mech behavior.
+`ARMOR_TOUGHNESS`, `ATTACK_DAMAGE`, `ATTACK_SPEED`, `LUCK`, `SWIM_SPEED`, and
+`JUMP_STRENGTH` which can be combined with modifiers to further customize mech
+behavior.
+

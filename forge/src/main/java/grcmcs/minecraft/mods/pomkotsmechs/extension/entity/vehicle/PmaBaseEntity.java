@@ -30,7 +30,8 @@ public abstract class PmaBaseEntity extends PmgBaseEntity {
 
     @Override
     protected boolean useEnergy(int dec) {
-        dec = dec * 2 / 3;
+        // innate modifier: aerial units consume only two-thirds of the requested energy before base scaling
+        dec = Math.round(dec * CombatBalance.PMA_ENERGY_COST_MODIFIER);
         return super.useEnergy(dec);
     }
 
