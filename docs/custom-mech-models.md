@@ -12,7 +12,8 @@ Place your resources under `src/main/resources/assets/pomkotsmechsextension` in 
 
 ## 2. Implement the model class
 
-Create a class that extends `GeoModel` similar to `Pmac01EntityModel`:
+Create a class that extends `GeoModel` similar to `Pmac01EntityModel` (e.g.
+`src/main/java/<your package>/client/model/MyMechModel.java`):
 
 ```java
 public class MyMechModel extends GeoModel<MyMechEntity> {
@@ -35,15 +36,67 @@ public class MyMechModel extends GeoModel<MyMechEntity> {
 
 ## 3. Create a renderer
 
-Implement a renderer extending `GeoEntityRenderer` and register it on the client like the existing `Pmac01EntityRenderer`.
+Implement a renderer extending `GeoEntityRenderer`. The renderer wires your
+model class to Minecraft's rendering system and can tweak shadows or render
+layers. Place it under something like
+`src/main/java/<your package>/client/renderer/MyMechRenderer.java`:
 
-## 4. Register the entity
+```java
+public class MyMechRenderer extends GeoEntityRenderer<MyMechEntity> {
+    public MyMechRenderer(EntityRendererProvider.Context context) {
+        super(context, new MyMechModel());
+        this.shadowRadius = 0.7F; // optional shadow size
+    }
+}
+```
 
-Register your mech entity and renderer during mod initialization. The `PomkotsMechsExtension` class provides examples of existing registrations.
+This mirrors the existing `Pmac01EntityRenderer` shipped with the mod.
+
+## 4. Register the entity and renderer
+
+Declare a `RegistrySupplier` for your mech (e.g.
+`src/main/java/<your package>/entity/vehicle/MyMechEntity.java`) and hook its
+attributes during mod initialization. The `PomkotsMechsExtension` class shows
+the same pattern for built‑in mechs:
+
+```java
+public static final RegistrySupplier<EntityType<MyMechEntity>> MY_MECH =
+    registerEntityType("my_mech", MyMechEntity::new, MobCategory.CREATURE, 4F, 10F);
+
+public static void initialize() {
+    ENTITIES.register();
+    EntityAttributeRegistry.register(MY_MECH::get, MyMechEntity::createMobAttributes);
+}
+```
+
+On the client side register the renderer:
+
+```java
+EntityRendererRegistry.register(PomkotsMechsExtension.MY_MECH,
+    context -> new MyMechRenderer(context));
+```
 
 With these steps your custom mech will render using your GeckoLib model, texture, and animations.
 
-## 5. Register weapons and attack animations
+## 5. Register weapons and items
+
+Weapon classes usually live under `src/main/java/<your package>/items`. Each needs a
+JSON model in `src/main/resources/assets/<modid>/models/item` and a texture in
+`textures/item`.
+
+```java
+public static final DeferredRegister<Item> ITEMS =
+    DeferredRegister.create(MODID, Registries.ITEM);
+
+public static final RegistrySupplier<Item> BEAM_RIFLE = ITEMS.register(
+    "beam_rifle", () -> new BeamRifleItem(new Item.Properties().stacksTo(1)));
+
+public static void initialize() {
+    ITEMS.register();
+}
+```
+
+## 6. Wire combat actions and attack animations
 
 A mech's attacks are controlled by an `ActionController` and tied to GeckoLib animations. In your entity class, register the actions you want to support:
 
@@ -91,9 +144,11 @@ All available keys are:
 
 Use whichever keys your mech supports when wiring the `ActionController` and animation controller.
 
-## 6. Tuning stats with attributes
+## 7. Tuning stats with attributes
 
-Define mech stats using Minecraft attributes. Start with a base value and apply modifiers to adjust them dynamically:
+Define mech stats using Minecraft attributes. Start with a base value and apply
+modifiers to adjust them dynamically. Typical mech stats include movement speed,
+attack damage, armor and knockback resistance:
 
 ```java
 public static AttributeSupplier.Builder createMobAttributes() {
@@ -117,6 +172,10 @@ this.getAttribute(Attributes.MOVEMENT_SPEED)
     .addTransientModifier(new AttributeModifier("dash_boost", 0.25, AttributeModifier.Operation.MULTIPLY_TOTAL));
 ```
 
-## 7. Additional features
+Beyond raw numbers, the `ActionController` maintains status flags (dash, jump,
+evasion, etc.) which your code can check to gate abilities or switch
+animations.
+
+## 8. Additional features
 
 Base mech classes expose extra actions such as jumps, dashes, evasion slides, mounting and cockpit sequences. The controller checks the current action and plays the matching animation (e.g. `dash`, `dash_side`, `evasion_left`, `cockpit_open`). These hooks let you add boosts, open/close cockpits, mount/dismount procedures or other movement abilities alongside your weapon animations.
