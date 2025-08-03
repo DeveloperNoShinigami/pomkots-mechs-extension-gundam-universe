@@ -168,6 +168,19 @@ getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(
     new AttributeModifier("dash_boost", 0.25, AttributeModifier.Operation.MULTIPLY_TOTAL));
 ```
 
+The extension also registers weapon-specific attributes so their values can be
+inspected and changed through the `/attribute` command:
+
+| Attribute | Purpose |
+|-----------|---------|
+| `pomkotsmechsextension:mech_beam_damage` | Base damage for beam projectiles |
+| `pomkotsmechsextension:mech_machinegun_damage` | Damage dealt by gatling bullets |
+| `pomkotsmechsextension:mech_missile_damage` | Damage for missile explosions |
+| `pomkotsmechsextension:mech_saber_damage` | Melee damage for sabers and piles |
+
+Like vanilla attributes these support the three modifier operations above, so
+addons can apply flat bonuses or multiplicative boosts.
+
 Modifier operations:
 
 * **ADDITION** – flat bonus, e.g. `+5` health
@@ -179,3 +192,7 @@ Modifier operations:
 **Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, and the weapon constants in `CombatBalance` for base damage and projectile speed.  An internal energy gauge is consumed by boosts and weapons.
 
 **Vanilla attributes** – `MAX_HEALTH`, `ATTACK_KNOCKBACK`, `KNOCKBACK_RESISTANCE` and any other `Attribute` supported by Minecraft can be attached to mechs for further tuning.
+
+Other useful vanilla stats include `MOVEMENT_SPEED`, `FLYING_SPEED`, `ARMOR`,
+`ARMOR_TOUGHNESS`, `ATTACK_DAMAGE`, `ATTACK_SPEED`, and `LUCK` which can be
+combined with modifiers to further customize mech behavior.

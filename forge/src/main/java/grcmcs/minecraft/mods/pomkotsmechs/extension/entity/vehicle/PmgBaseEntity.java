@@ -9,6 +9,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.entity.vehicle.equipment.action.Action
 import grcmcs.minecraft.mods.pomkotsmechs.entity.vehicle.equipment.action.ActionController;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.PomkotsMechsExtension;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -312,8 +313,24 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
         return new float[]{(float)xRot, (float)yRot};
     }
 
+    protected float getBeamDamage() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_BEAM_DAMAGE.get());
+    }
+
+    protected float getMissileDamage() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_MISSILE_DAMAGE.get());
+    }
+
+    protected float getMachineGunDamage() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_MACHINEGUN_DAMAGE.get());
+    }
+
+    protected float getSaberDamage() {
+        return (float) this.getAttributeValue(ModAttributes.MECH_SABER_DAMAGE.get());
+    }
+
     protected void fireSaber(Level level) {
-        this.fireSaber(level, CombatBalance.BASE_DAMAGE_SABER);
+        this.fireSaber(level, getSaberDamage());
     }
 
     protected void fireSaber(Level level, float damage) {
