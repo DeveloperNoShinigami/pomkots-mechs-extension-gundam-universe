@@ -28,6 +28,10 @@ public class ModAttributes {
             () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_saber_damage",
                     CombatBalance.BASE_DAMAGE_SABER, 0.0D, 2048.0D).setSyncable(true));
 
+    public static final RegistrySupplier<Attribute> MECH_ENERGY = ATTRIBUTES.register("mech_energy",
+            () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_energy",
+                    CombatBalance.BASE_ENERGY, 0.0D, 2048.0D).setSyncable(true));
+
     public static void init() {
         ATTRIBUTES.register();
     }

@@ -35,15 +35,12 @@ import java.util.List;
 public abstract class PmgBaseEntity extends PomkotsVehicleBase {
     public static final float DEFAULT_SCALE = 1.0f;
 
+    protected int energy = CombatBalance.BASE_ENERGY;
+    private boolean energyInitialized = false;
+
     @Override
     protected String getMechName() {
         return "base";
-    }
-
-    @Override
-    protected boolean useEnergy(int dec) {
-        dec = dec * 2;
-        return super.useEnergy(dec);
     }
 
     @Override
@@ -62,6 +59,11 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
 
     @Override
     public void tick() {
+        if (!energyInitialized) {
+            energy = getMaxEnergy();
+            energyInitialized = true;
+        }
+
         super.tick();
 
         if (this.onGround()) {
@@ -77,6 +79,36 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
         }
         previousMode = this.isMainMode();
         previousOnground = this.onGround();
+    }
+
+    @Override
+    public int getEnergy() {
+        return energy;
+    }
+
+    protected int getMaxEnergy() {
+        return (int) this.getAttributeValue(ModAttributes.MECH_ENERGY.get());
+    }
+
+    @Override
+    protected void chargeEnergy() {
+        int max = getMaxEnergy();
+        if (energy > max) {
+            energy = max;
+        } else if (energy < max) {
+            energy = Math.min(max, energy + 2);
+        }
+    }
+
+    @Override
+    protected boolean useEnergy(int dec) {
+        dec = dec * 2;
+        if (energy - dec < 0) {
+            energy = 0;
+            return false;
+        }
+        energy -= dec;
+        return true;
     }
 
     protected void handleCollisionWithProjectiles() {
