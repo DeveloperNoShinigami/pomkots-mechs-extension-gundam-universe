@@ -35,8 +35,10 @@ public class Pmac02cEntity extends Pmac02Entity {
                 .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 2.5F)
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 8F)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 8F)
-                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
-
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), CombatBalance.BASE_JUMP_SUSTAIN_MULTIPLIER)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmac02cEntity(EntityType<? extends LivingEntity> entityType, Level world) {

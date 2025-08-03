@@ -41,8 +41,10 @@ public class Pmge02Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), CombatBalance.BASE_DASH_SIDE_SPEED)
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), CombatBalance.BASE_EVASION_LEFT_SPEED)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), CombatBalance.BASE_EVASION_RIGHT_SPEED)
-                .add(ModAttributes.MECH_JUMP_POWER.get(), CombatBalance.BASE_JUMP_SPEED);
-
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), CombatBalance.BASE_JUMP_SUSTAIN_MULTIPLIER)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), CombatBalance.BASE_JUMP_SPEED)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmge02Entity(EntityType<? extends LivingEntity> entityType, Level world) {

@@ -30,13 +30,16 @@ public class CombatBalance {
     public static final float BASE_EVASION_LEFT_SPEED = 7.125F;
     public static final float BASE_EVASION_RIGHT_SPEED = 7.125F;
     public static final float BASE_JUMP_SPEED = 2.0F;
-    // innate modifier: portion of jump speed applied while button held
-    public static final float JUMP_CONTINUE_MULTIPLIER = 0.35F;
+    public static final float BASE_JUMP_SUSTAIN_MULTIPLIER = 0.35F; // innate modifier: portion of jump speed applied while button held
+
+    // AI pilot behaviour defaults
+    public static final float BASE_PILOT_ACCURACY = 1.0F; // innate multiplier for ranged attack spread
+    public static final float BASE_PILOT_REACTION = 1.0F; // innate multiplier for AI action cooldowns
 
     // Innate modifiers applied by mech logic
     public static final float DAMAGE_MODIFIER = 2F / 3F; // scales most weapon damage
     public static final float ENERGY_COST_MULTIPLIER = 2F; // doubles energy cost in base class
     public static final float PMA_ENERGY_COST_MODIFIER = 2F / 3F; // aerial units consume less energy before base multiplier
     public static final float LARGE_BEAM_DAMAGE_MULTIPLIER = 2F; // doubles damage for large beam variants
-
 }
+

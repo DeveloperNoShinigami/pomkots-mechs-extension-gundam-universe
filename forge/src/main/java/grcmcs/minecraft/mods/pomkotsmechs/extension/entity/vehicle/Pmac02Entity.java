@@ -42,7 +42,10 @@ public class Pmac02Entity extends PmaBaseEntity {
                 .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 2.5F)
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 8F)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 8F)
-                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), CombatBalance.BASE_JUMP_SUSTAIN_MULTIPLIER)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmac02Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -114,7 +117,6 @@ public class Pmac02Entity extends PmaBaseEntity {
         if (!level.isClientSide()) {
             // innate modifier: beam shot uses two-thirds of the beam attribute
             BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this, (int)(getBeamDamage() * CombatBalance.DAMAGE_MODIFIER));
-
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -248,3 +250,4 @@ public class Pmac02Entity extends PmaBaseEntity {
 
     @Override
 }
+

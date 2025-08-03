@@ -182,13 +182,18 @@ their values can be inspected and changed through the `/attribute` command:
 | `pomkotsmechsextension:mech_dash_side_speed` | Lateral dash speed when evading without forward input |
 | `pomkotsmechsextension:mech_evasion_left_speed` | Distance covered by left evasion hops |
 | `pomkotsmechsextension:mech_evasion_right_speed` | Distance covered by right evasion hops |
-| `pomkotsmechsextension:mech_jump_power` | Initial jump velocity before the innate sustain modifier |
+| `pomkotsmechsextension:mech_jump_power` | Initial jump velocity before the sustain multiplier |
+| `pomkotsmechsextension:mech_jump_sustain` | Portion of jump power reapplied each tick while the jump key is held |
+| `pomkotsmechsextension:mech_pilot_accuracy` | Multiplier applied to AI projectile spread; higher values mean tighter aim |
+| `pomkotsmechsextension:mech_pilot_reaction` | Multiplier that scales AI reaction and attack delays |
+
+Pilot attributes control how effectively AI pilots handle their suits, enabling custom precision or sluggishness for hostile mechs.
 
 Movement entries behave like their weapon counterparts—the base value is
 read directly from the attribute and game logic multiplies it when
-necessary.  Sustained jumping, for example, applies an innate
-`JUMP_CONTINUE_MULTIPLIER` to `mech_jump_power` each tick the jump key is
-held.
+necessary. Sustained jumping, for example, multiplies `mech_jump_power`
+by `mech_jump_sustain` each tick the jump key is held.
+
 
 These attributes hold the flat base values for each mech.  Attack logic then
 applies innate modifiers internally—for example most projectiles and saber
@@ -207,7 +212,7 @@ Modifier operations:
 
 ## 9. Attribute reference
 
-**Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, and the weapon constants in `CombatBalance` for base damage and projectile speed.  `MECH_ENERGY` controls the size of the internal gauge consumed by boosts and weapons.
+**Mod stats** – `MECH_HEALTH`, `MECH_PILE_DAMAGE`, `MECH_GATLING_DAMAGE`, `MECH_GRENADE_DAMAGE`, `MECH_GRENADE_EXPLOSION`, `MECH_MISSILE_DAMAGE`, `MECH_MISSILE_EXPLOSION`, the weapon constants in `CombatBalance` for base damage and projectile speed, and pilot fields like `MECH_PILOT_ACCURACY` and `MECH_PILOT_REACTION` for AI behaviour.  `MECH_ENERGY` controls the size of the internal gauge consumed by boosts and weapons.
 
 **Vanilla attributes** – `MAX_HEALTH`, `ATTACK_KNOCKBACK`, `KNOCKBACK_RESISTANCE` and any other `Attribute` supported by Minecraft can be attached to mechs for further tuning.
 

@@ -9,6 +9,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamEntity
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamLargeEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -35,9 +36,12 @@ public class Pmge03Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 1.7F)
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 10F)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 10F)
-                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
-
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), 2F / 3.5F)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
+
 
     public Pmge03Entity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
@@ -91,6 +95,7 @@ public class Pmge03Entity extends PmgBaseEntity {
             for (int i = 0; i < 2; i++) {
                 BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this, (int)getBeamDamage());
 
+
                 // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
                 // ので、3tick前の座標をオフセットにする
                 // なんかaddVelocity周りが悪さしてる…？
@@ -115,6 +120,7 @@ public class Pmge03Entity extends PmgBaseEntity {
             for (int i = 0; i < 3; i+=2) {
                 // innate modifier: large beam doubles the beam attribute
                 BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.LARGE_BEAM_DAMAGE_MULTIPLIER));
+
 
                 // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
                 // ので、3tick前の座標をオフセットにする
@@ -222,10 +228,5 @@ public class Pmge03Entity extends PmgBaseEntity {
             registerAnimationSoundHandlers(state);
         }));
     }
-
-    @Override
-    @Override
-    protected float getJumpContinueSpped() {
-        return getJumpInitialSpped() * (2F / 3.5F);
-    }
 }
+

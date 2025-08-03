@@ -9,7 +9,6 @@ import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamLargeEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -42,8 +41,10 @@ public class Pmgz03Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_DASH_SIDE_SPEED.get(), 2.0F)
                 .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get(), 10F)
                 .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get(), 10F)
-                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F);
-
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get(), 2F / 3.5F)
+                .add(ModAttributes.MECH_JUMP_POWER.get(), 3.5F)
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
+                .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
     public Pmgz03Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -178,6 +179,7 @@ public class Pmgz03Entity extends PmgBaseEntity {
 
                 MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage());
 
+
                 be.setPos(offset.add(worldMuzzlPos));
 
                 be.shootFromRotation(be, 0, this.getYRot(), this.getFallFlyingTicks(), 1F, 0F);
@@ -268,9 +270,5 @@ public class Pmgz03Entity extends PmgBaseEntity {
             registerAnimationSoundHandlers(state);
         }));
     }
-
-    @Override
-    protected float getJumpContinueSpped() {
-        return getJumpInitialSpped() * (2F / 3.5F);
-    }
 }
+
