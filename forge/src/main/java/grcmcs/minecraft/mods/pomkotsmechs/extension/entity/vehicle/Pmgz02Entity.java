@@ -230,6 +230,5 @@ public class Pmgz02Entity extends PmgBaseEntity {
         return Mth.abs((float)vel.x) > 0.3 || Mth.abs((float)vel.z) > 0.3 || Mth.abs((float)vel.y) > 0.3;
     }
 
-    @Override
 }
 
