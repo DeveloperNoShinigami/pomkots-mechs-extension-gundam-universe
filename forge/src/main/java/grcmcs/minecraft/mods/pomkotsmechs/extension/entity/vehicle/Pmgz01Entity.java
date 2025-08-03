@@ -10,6 +10,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MachineGun
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.ZakuBazookaEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -46,6 +47,7 @@ public class Pmgz01Entity extends PmgBaseEntity {
                 .add(ModAttributes.MECH_PILOT_ACCURACY.get(), CombatBalance.BASE_PILOT_ACCURACY)
                 .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
+
 
     public Pmgz01Entity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
@@ -96,6 +98,7 @@ public class Pmgz01Entity extends PmgBaseEntity {
     private void fireShoot(Level level) {
         if (!level.isClientSide()) {
             MachineGunBulletEntity be = new MachineGunBulletEntity(PomkotsMechsExtension.MACHINEGUNBULLET.get(), level, this, (int)getMachineGunDamage());
+
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする

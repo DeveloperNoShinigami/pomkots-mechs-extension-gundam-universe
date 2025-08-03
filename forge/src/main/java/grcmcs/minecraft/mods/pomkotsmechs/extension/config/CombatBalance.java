@@ -42,3 +42,4 @@ public class CombatBalance {
     public static final float PMA_ENERGY_COST_MODIFIER = 2F / 3F; // aerial units consume less energy before base multiplier
     public static final float LARGE_BEAM_DAMAGE_MULTIPLIER = 2F; // doubles damage for large beam variants
 }
+

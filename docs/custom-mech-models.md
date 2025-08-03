@@ -194,6 +194,7 @@ read directly from the attribute and game logic multiplies it when
 necessary. Sustained jumping, for example, multiplies `mech_jump_power`
 by `mech_jump_sustain` each tick the jump key is held.
 
+
 These attributes hold the flat base values for each mech.  Attack logic then
 applies innate modifiers internally—for example most projectiles and saber
 swings use two‑thirds of their attribute value, large beam shots double the
@@ -219,3 +220,4 @@ Other useful vanilla stats include `MOVEMENT_SPEED`, `FLYING_SPEED`, `ARMOR`,
 `ARMOR_TOUGHNESS`, `ATTACK_DAMAGE`, `ATTACK_SPEED`, `LUCK`, `SWIM_SPEED`, and
 `JUMP_STRENGTH` which can be combined with modifiers to further customize mech
 behavior.
+

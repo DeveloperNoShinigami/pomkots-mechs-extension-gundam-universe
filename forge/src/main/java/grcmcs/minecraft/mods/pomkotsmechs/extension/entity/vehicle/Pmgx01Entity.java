@@ -116,6 +116,7 @@ public class Pmgx01Entity extends PmgBaseEntity {
 
     private void fireTetsu(Level level) {
             this.fireSaber(level, getSaberDamage() * 1.2F, 100);
+
     }
 
     private void fireMissile(Level level) {
@@ -226,3 +227,4 @@ public class Pmgx01Entity extends PmgBaseEntity {
 
     @Override
 }
+

@@ -239,5 +239,5 @@ public class Pmge04Entity extends PmgBaseEntity {
     protected float getWalkSpeed() {
         return 0.5F;
     }
-
 }
+

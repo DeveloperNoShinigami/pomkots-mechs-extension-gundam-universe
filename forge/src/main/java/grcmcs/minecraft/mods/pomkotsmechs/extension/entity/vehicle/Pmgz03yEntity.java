@@ -12,9 +12,7 @@ public class Pmgz03yEntity extends Pmgz03Entity {
     @Override
     protected String getMechName() {
         return "base";
-    }
-
-    public static AttributeSupplier.Builder createMobAttributes() {
+    }    public static AttributeSupplier.Builder createMobAttributes() {
         return createLivingAttributes()
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)

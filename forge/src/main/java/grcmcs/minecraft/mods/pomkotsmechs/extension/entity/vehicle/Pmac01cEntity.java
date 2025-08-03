@@ -44,6 +44,7 @@ public class Pmac01cEntity extends Pmac01Entity {
                 .add(ModAttributes.MECH_PILOT_REACTION.get(), CombatBalance.BASE_PILOT_REACTION);
     }
 
+
     public Pmac01cEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }

@@ -107,6 +107,7 @@ public class Pmac02Entity extends PmaBaseEntity {
                 || actionController.getAction(ACT_SABER3).isOnFire()) {
             // innate modifier: saber strikes use two-thirds of the saber attribute
             this.fireSaber(level, getSaberDamage() * CombatBalance.DAMAGE_MODIFIER);
+
         } else if (actionController.getAction(ACT_BAZOOKA).isOnFire()) {
             this.fireBazooka(level);
         }
@@ -140,6 +141,7 @@ public class Pmac02Entity extends PmaBaseEntity {
             for (int i = 0; i < 3; i+=2) {
                 // innate modifier: beam shot uses two-thirds of the beam attribute
                 BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this, (int)(getBeamDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
                 // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
                 // ので、3tick前の座標をオフセットにする
@@ -248,3 +250,4 @@ public class Pmac02Entity extends PmaBaseEntity {
 
     @Override
 }
+

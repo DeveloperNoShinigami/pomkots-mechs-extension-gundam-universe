@@ -179,6 +179,7 @@ public class Pmgz03Entity extends PmgBaseEntity {
 
                 MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage());
 
+
                 be.setPos(offset.add(worldMuzzlPos));
 
                 be.shootFromRotation(be, 0, this.getYRot(), this.getFallFlyingTicks(), 1F, 0F);
@@ -269,5 +270,5 @@ public class Pmgz03Entity extends PmgBaseEntity {
             registerAnimationSoundHandlers(state);
         }));
     }
-
 }
+

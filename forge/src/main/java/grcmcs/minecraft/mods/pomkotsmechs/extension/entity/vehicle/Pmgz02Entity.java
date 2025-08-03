@@ -103,6 +103,7 @@ public class Pmgz02Entity extends PmgBaseEntity {
                 || actionController.getAction(ACT_SABER2).isOnFire()
                 || actionController.getAction(ACT_SABER3).isOnFire()) {
             this.fireSaber(level, getSaberDamage() * 1.5F);
+
         }
     }
 
@@ -231,3 +232,4 @@ public class Pmgz02Entity extends PmgBaseEntity {
 
     @Override
 }
+

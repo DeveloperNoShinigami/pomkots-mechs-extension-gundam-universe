@@ -112,6 +112,38 @@ public abstract class PmgBaseEntity extends PomkotsVehicleBase {
         return true;
     }
 
+    @Override
+    public int getEnergy() {
+        return energy;
+    }
+
+    protected int getMaxEnergy() {
+        return (int) this.getAttributeValue(ModAttributes.MECH_ENERGY.get());
+    }
+
+    @Override
+    protected void chargeEnergy() {
+        int max = getMaxEnergy();
+        if (energy > max) {
+            energy = max;
+        } else if (energy < max) {
+            energy = Math.min(max, energy + 2);
+        }
+    }
+
+    @Override
+    protected boolean useEnergy(int dec) {
+        // innate modifier: base class doubles the requested energy cost
+        dec = Math.round(dec * CombatBalance.ENERGY_COST_MULTIPLIER);
+
+        if (energy - dec < 0) {
+            energy = 0;
+            return false;
+        }
+        energy -= dec;
+        return true;
+    }
+
     protected void handleCollisionWithProjectiles() {
         // ボスのAABB（現在の位置からの範囲）
         AABB bossBoundingBox = this.getBoundingBox();

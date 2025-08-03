@@ -104,6 +104,7 @@ public class Pmac01Entity extends PmaBaseEntity {
             // innate modifier: bullet deals two-thirds of the beam attribute
             BulletLargeEntity be = new BulletLargeEntity(PomkotsMechsExtension.BULLETLARGE.get(), level, this, (int)(getBeamDamage() * CombatBalance.DAMAGE_MODIFIER));
 
+
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
             // なんかaddVelocity周りが悪さしてる…？
@@ -164,6 +165,7 @@ public class Pmac01Entity extends PmaBaseEntity {
 
                 // innate modifier: missiles fire at two-thirds of the missile attribute
                 MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, (int)(getMissileDamage() * CombatBalance.DAMAGE_MODIFIER));
+
 
                 be.setPos(offset.add(worldMuzzlPos));
 

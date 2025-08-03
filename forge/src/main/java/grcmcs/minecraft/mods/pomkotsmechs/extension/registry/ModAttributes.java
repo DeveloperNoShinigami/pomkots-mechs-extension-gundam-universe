@@ -52,7 +52,7 @@ public class ModAttributes {
             () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_jump_power",
                     CombatBalance.BASE_JUMP_SPEED, 0.0D, 1024.0D).setSyncable(true));
 
-    public static final RegistrySupplier<Attribute> MECH_JUMP_SUSTAIN = ATTRIBUTES.register("mech_jump_sustain",
+  public static final RegistrySupplier<Attribute> MECH_JUMP_SUSTAIN = ATTRIBUTES.register("mech_jump_sustain",
             () -> new RangedAttribute("attribute.name." + PomkotsMechsExtension.MODID + ".mech_jump_sustain",
                     CombatBalance.BASE_JUMP_SUSTAIN_MULTIPLIER, 0.0D, 8.0D).setSyncable(true));
 
