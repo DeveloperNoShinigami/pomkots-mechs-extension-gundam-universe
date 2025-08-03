@@ -6,6 +6,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.entity.vehicle.equipment.action.Action
 import grcmcs.minecraft.mods.pomkotsmechs.extension.PomkotsMechsExtension;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -27,7 +28,12 @@ public class Pmgx01Entity extends PmgBaseEntity {
         return createLivingAttributes()
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.7);
+                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.7)
+                .add(ModAttributes.MECH_BEAM_DAMAGE.get(), CombatBalance.BASE_DAMAGE_BEAM)
+                .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
+                .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
+                .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY);
     }
 
     public Pmgx01Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -97,11 +103,11 @@ public class Pmgx01Entity extends PmgBaseEntity {
     }
 
     private void fireChest(Level level) {
-        this.fireSaber(level, CombatBalance.BASE_DAMAGE_SABER * 1.5F, 100);
+            this.fireSaber(level, getSaberDamage() * 1.5F, 100);
     }
 
     private void fireTetsu(Level level) {
-        this.fireSaber(level, CombatBalance.BASE_DAMAGE_SABER * 1.2F, 100);
+            this.fireSaber(level, getSaberDamage() * 1.2F, 100);
     }
 
     private void fireMissile(Level level) {
@@ -117,7 +123,7 @@ public class Pmgx01Entity extends PmgBaseEntity {
             for (int i = 0; i < 6; i++) {
                 var worldMuzzlPos = muzzlPos.add(4.5 * (i / 3 - 0.5),1 * (i % 3),0).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, CombatBalance.BASE_DAMAGE_MISSILE /2);
+                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage() / 2);
 
                 be.setPos(offset.add(worldMuzzlPos));
 

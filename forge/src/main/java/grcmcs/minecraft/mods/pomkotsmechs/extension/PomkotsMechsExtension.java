@@ -8,6 +8,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.PomkotsMechs;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.*;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.vehicle.*;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.items.*;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -148,7 +149,8 @@ public class PomkotsMechsExtension {
 //		AutoConfig.register(grcmcs.minecraft.mods.pomkotsmechs.config.PomkotsConfig.class, GsonConfigSerializer::new);
 //		CONFIG = AutoConfig.getConfigHolder(grcmcs.minecraft.mods.pomkotsmechs.config.PomkotsConfig.class).getConfig();
 
-		ENTITIES.register();
+                ModAttributes.init();
+                ENTITIES.register();
 
 		EntityAttributeRegistry.register(PMGZ01::get, Pmgz01Entity::createMobAttributes);
 		EntityAttributeRegistry.register(PMGZ02::get, Pmgz02Entity::createMobAttributes);

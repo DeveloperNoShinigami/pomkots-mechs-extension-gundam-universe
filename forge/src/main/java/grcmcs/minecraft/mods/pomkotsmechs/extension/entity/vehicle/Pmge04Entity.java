@@ -10,6 +10,7 @@ import grcmcs.minecraft.mods.pomkotsmechs.extension.config.CombatBalance;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.BeamLargeEntity;
 import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.projectile.MissileHorizontalEntity;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.registry.ModAttributes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -39,7 +40,12 @@ public class Pmge04Entity extends PmgBaseEntity {
         return createLivingAttributes()
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.3);
+                .add(Attributes.MAX_HEALTH, CombatBalance.BASE_HEALTH * 0.3)
+                .add(ModAttributes.MECH_BEAM_DAMAGE.get(), CombatBalance.BASE_DAMAGE_BEAM)
+                .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MACHINEGUN)
+                .add(ModAttributes.MECH_MISSILE_DAMAGE.get(), CombatBalance.BASE_DAMAGE_MISSILE)
+                .add(ModAttributes.MECH_SABER_DAMAGE.get(), CombatBalance.BASE_DAMAGE_SABER)
+                .add(ModAttributes.MECH_ENERGY.get(), CombatBalance.BASE_ENERGY);
     }
 
     public Pmge04Entity(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -91,7 +97,7 @@ public class Pmge04Entity extends PmgBaseEntity {
 
     private void fireShoot(Level level) {
         if (!level.isClientSide()) {
-            BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this);
+            BeamEntity be = new BeamEntity(PomkotsMechsExtension.BEAM.get(), level, this, (int)getBeamDamage());
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -113,7 +119,7 @@ public class Pmge04Entity extends PmgBaseEntity {
 
     private void fireBazooka(Level level) {
         if (!level.isClientSide()) {
-            BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this);
+            BeamLargeEntity be = new BeamLargeEntity(PomkotsMechsExtension.BEAMLARGE.get(), level, this, (int)(getBeamDamage() * 2));
 
             // 原因不明なんだけど、getPosした時の座標と、レンダリングされてる座標で3tick分ぐらい乖離がある気配がする
             // ので、3tick前の座標をオフセットにする
@@ -149,7 +155,7 @@ public class Pmge04Entity extends PmgBaseEntity {
             for (int i = 0; i < 6; i++) {
                 var worldMuzzlPos = muzzlPos.add(2 * (i / 3),2 * (i % 3),0).yRot((float) Math.toRadians((-1.0) * this.getYRot()));
 
-                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null);
+                MissileHorizontalEntity be = new MissileHorizontalEntity(PomkotsMechsExtension.MISSILE.get(), level, this, null, getMissileDamage());
 
                 be.setPos(offset.add(worldMuzzlPos));
 
