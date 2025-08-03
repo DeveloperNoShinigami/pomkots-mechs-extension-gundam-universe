@@ -1,5 +1,12 @@
 plugins {
+    id 'dev.architectury.loom'
+    id 'architectury-plugin'
     id 'com.github.johnrengelman.shadow'
+    id 'maven-publish'
+}
+
+base {
+    archivesName = "${rootProject.archives_name}-${project.name}"
 }
 
 loom {
@@ -9,6 +16,7 @@ loom {
 }
 
 architectury {
+    minecraft = rootProject.minecraft_version
     platformSetupLoomIde()
     forge()
 }
@@ -28,18 +36,52 @@ repositories {
     }
 
     maven { url "https://maven.shedaniel.me/" }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroupByRegex("software\\.bernie.*")
+            includeGroup("com.eliotlash.mclib")
+        }
+    }
 }
 
 
 dependencies {
+    minecraft "net.minecraft:minecraft:${rootProject.minecraft_version}"
+    mappings loom.officialMojangMappings()
     forge "net.minecraftforge:forge:$rootProject.forge_version"
 
     // Architectury API. This is optional, and you can comment it out if you don't need it.
     modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
-    implementation(name: 'geckolib-forge-1.20.1-4.4.9-deobf', ext: 'jar')  // 'libs/A.jar' を依存関係に追加
+    implementation("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
+    implementation("com.eliotlash.mclib:mclib:20")
     implementation(name: 'pomkotsmechs-forge-0.0.1-alpha.4-dev-shadow', ext: 'jar')
 
     modApi("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = base.archivesName.get()
+            from components.java
+        }
+    }
+
+    repositories {
+        // Add repositories to publish to here if needed.
+    }
 }
 
 processResources {

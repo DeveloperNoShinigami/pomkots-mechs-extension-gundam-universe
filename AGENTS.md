@@ -81,4 +81,42 @@ its code, treat it as an addon. The basic steps are:
    in the documentation.
 
 
+## GeckoLib 4 Integration
+To install GeckoLib 4:
+
+1. **Repository** – In the module's `repositories` block add:
+   ```gradle
+   maven {
+       name = 'GeckoLib'
+       url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+       content {
+           includeGroupByRegex("software\\.bernie.*")
+           includeGroup("com.eliotlash.mclib")
+       }
+   }
+   ```
+2. **Dependencies** – Declare GeckoLib and MCLib:
+   ```gradle
+   implementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
+   implementation "com.eliotlash.mclib:mclib:20"
+   ```
+3. **Properties** – Set the version in `gradle.properties` (example for MC 1.20.1):
+   ```properties
+   geckolib_version=4.4.9
+   ```
+4. **Mixin Plugin** – Ensure `build.gradle` includes:
+   ```gradle
+   buildscript {
+       repositories {
+           maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+       }
+   }
+
+   plugins {
+       id 'org.spongepowered.mixin' version '0.7.+' apply false
+   }
+   ```
+   and apply `org.spongepowered.mixin` to subprojects that require mixins.
+
+
 This overview provides a starting point for building or scripting an automated agent to assist with Minecraft modding tasks.
