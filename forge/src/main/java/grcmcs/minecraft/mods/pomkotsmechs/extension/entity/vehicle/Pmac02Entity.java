@@ -248,6 +248,5 @@ public class Pmac02Entity extends PmaBaseEntity {
         }));
     }
 
-    @Override
 }
 
