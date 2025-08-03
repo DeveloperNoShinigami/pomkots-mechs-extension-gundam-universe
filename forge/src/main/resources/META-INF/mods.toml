@@ -54,3 +54,6 @@ mandatory = true
 versionRange = "[0.0.1-alpha.4,)"
 ordering = "AFTER"
 side = "CLIENT"
+
+[[mixins]]
+config = "pomkotsmechsextension.mixins.json"
