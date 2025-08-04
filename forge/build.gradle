@@ -26,6 +26,9 @@ repositories {
         dirs 'libs'  // プロジェクト内のlibsフォルダを指定
     }
 
+    mavenCentral()
+    maven { url 'https://maven.minecraftforge.net/' }
+
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.architectury.dev/" }
     maven {
