@@ -52,8 +52,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// Ensure sources compile consistently across platforms with UTF-8 encoding
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    options.release = 17
+    options.encoding = 'UTF-8'
 }
 
 publishing {
