@@ -27,6 +27,7 @@ repositories {
     }
 
     maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.architectury.dev/" }
     maven {
         name = 'GeckoLib'
         url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
@@ -44,6 +45,7 @@ dependencies {
     implementation fg.deobf("com.eliotlash.mclib:mclib:20")
     implementation files('libs/pomkotsmechs-forge-0.0.1-alpha.4-dev-shadow.jar')
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}")
+    implementation fg.deobf("dev.architectury:architectury-forge:${rootProject.architectury_version}")
 }
 
 java {
