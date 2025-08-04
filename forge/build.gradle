@@ -1,6 +1,5 @@
 plugins {
-    id 'dev.architectury.loom'
-    id 'architectury-plugin'
+    id 'net.minecraftforge.gradle' version '6.0.+' 
     id 'com.github.johnrengelman.shadow'
     id 'maven-publish'
 }
@@ -9,16 +8,8 @@ base {
     archivesName = "${rootProject.archives_name}-${project.name}"
 }
 
-loom {
-    forge {
-        mixinConfig "pomkotsmechsextension.mixins.json"
-    }
-}
-
-architectury {
-    minecraft = rootProject.minecraft_version
-    platformSetupLoomIde()
-    forge()
+minecraft {
+    mappings channel: 'official', version: rootProject.minecraft_version
 }
 
 configurations {
@@ -46,19 +37,13 @@ repositories {
     }
 }
 
-
 dependencies {
-    minecraft "net.minecraft:minecraft:${rootProject.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    forge "net.minecraftforge:forge:$rootProject.forge_version"
+    minecraft "net.minecraftforge:forge:${rootProject.forge_version}"
 
-    // Architectury API. This is optional, and you can comment it out if you don't need it.
-    modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
-    implementation("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
-    implementation("com.eliotlash.mclib:mclib:20")
-    implementation(name: 'pomkotsmechs-forge-0.0.1-alpha.4-dev-shadow', ext: 'jar')
-
-    modApi("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${rootProject.minecraft_version}:${rootProject.geckolib_version}")
+    implementation fg.deobf("com.eliotlash.mclib:mclib:20")
+    implementation files('libs/pomkotsmechs-forge-0.0.1-alpha.4-dev-shadow.jar')
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}")
 }
 
 java {
@@ -92,11 +77,16 @@ processResources {
     }
 }
 
+// Configure the shaded jar and reobfuscation
 shadowJar {
     configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+    archiveClassifier.set('')
+    finalizedBy 'reobfShadowJar'
 }
 
-remapJar {
-    input.set shadowJar.archiveFile
+reobf {
+    shadowJar {}
 }
+
+tasks.build.dependsOn 'reobfShadowJar'
+
