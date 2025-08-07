@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'pomkotsmechs'
+rootProject.name = 'pmegundamuniverse'
 
 include 'common'
 include 'fabric'

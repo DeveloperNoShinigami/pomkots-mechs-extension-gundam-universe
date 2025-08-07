@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "pomkotsmechsextension",
+  "id": "pmegundamuniverse",
   "version": "${version}",
-  "name": "Pomkots Mechs Extension",
-  "description": "Add massive mechs to your world!",
+  "name": "Pomkots Mechs - Gundam Universe",
+  "description": "Addon that introduces Gundam mechs to Pomkots Mechs.",
   "authors": [
     "grc_mcs"
   ],
@@ -12,18 +12,18 @@
     "sources": "https://github.com/grc-mcs/pomkots-mechs/"
   },
   "license": "ARR",
-  "icon": "assets/pomkotsmechsextension/icon.png",
+  "icon": "assets/pmegundamuniverse/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "grcmcs.minecraft.mods.pomkotsmechs.extension.fabric.PomkotsMechsExtensionFabric"
+      "net.bluelotuscoding.pmegundamuniverse.fabric.PmegundamuniverseFabric"
     ],
     "client": [
-      "grcmcs.minecraft.mods.pomkotsmechs.extension.fabric.client.PomkotsMechsExtensionClientFabric"
+      "net.bluelotuscoding.pmegundamuniverse.fabric.client.PmegundamuniverseClientFabric"
     ]
   },
   "mixins": [
-    "pomkotsmechsextension.mixins.json"
+    "pmegundamuniverse.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.5",
