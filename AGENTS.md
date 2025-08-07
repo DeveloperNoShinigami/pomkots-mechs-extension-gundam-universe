@@ -188,3 +188,6 @@ What went well:
 What went wrong:
 Improvements:
 ```
+
+## Additional Insights
+- Ensure entity data fields are covered by serialization tests to catch persistence issues early.
