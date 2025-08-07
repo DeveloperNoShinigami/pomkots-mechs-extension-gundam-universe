@@ -1,5 +1,7 @@
 package net.bluelotuscoding.pmegundamuniverse;
 
+import net.bluelotuscoding.pmegundamuniverse.entity.ModEntities;
+
 /**
  * Main mod class for Pomkots Mechs - Gundam Universe.
  */
@@ -10,6 +12,6 @@ public final class Pmegundamuniverse {
     }
 
     public static void init() {
-        // TODO: register Gundam mechs and related content here
+        ModEntities.init();
     }
 }
