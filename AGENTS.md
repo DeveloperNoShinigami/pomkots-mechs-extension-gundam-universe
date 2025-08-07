@@ -188,3 +188,7 @@ What went well:
 What went wrong:
 Improvements:
 ```
+
+## Recent Insights
+- Added placeholder `PomkotsVehicleBase` with an energy gauge to support mech ability tests.
+- Implemented `GundamMechEntity` ability hooks that consume energy and trigger simple effects.
