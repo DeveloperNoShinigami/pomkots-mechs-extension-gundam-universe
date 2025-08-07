@@ -4,51 +4,51 @@ loaderVersion = "[47,)"
 license = "ARR"
 
 [[mods]]
-modId = "pomkotsmechsextension"
+modId = "pmegundamuniverse"
 version = "${version}"
-displayName = "Pomkots Mechs Extension"
+displayName = "Pomkots Mechs - Gundam Universe"
 authors = "grc_mcs"
 description = '''
-Add massive mechs to your world!
+Addon that introduces Gundam mechs to Pomkots Mechs.
 '''
-logoFile = "assets/pomkotsmechsextension/icon.png"
+logoFile = "assets/pmegundamuniverse/icon.png"
 
-[[dependencies.pomkotsmechsextension]]
+[[dependencies.pmegundamuniverse]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.pomkotsmechsextension]]
+[[dependencies.pmegundamuniverse]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.pomkotsmechsextension]]
+[[dependencies.pmegundamuniverse]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.2.14,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.pomkotsmechsextension]]
+[[dependencies.pmegundamuniverse]]
 modId = "geckolib"
 mandatory = true
 versionRange = "[4.4.9,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.pomkotsmechsextension]]
+[[dependencies.pmegundamuniverse]]
 modId = "leawind_third_person"
 mandatory = true
 versionRange = "[2.1.0,)"
 ordering = "AFTER"
 side = "CLIENT"
 
-[[dependencies.pomkotsmechsextension]]
+[[dependencies.pmegundamuniverse]]
 modId = "pomkotsmechs"
 mandatory = true
 versionRange = "[0.0.1-alpha.4,)"
