@@ -5,6 +5,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -22,6 +28,47 @@ public class GundamMechEntity extends PomkotsVehicleBase {
 
     public GundamMechEntity(EntityType<? extends PomkotsVehicleBase> type, Level level) {
         super(type, level);
+        AttributeInstance max = this.getAttribute(ModAttributes.MECH_ENERGY.get());
+        this.energy = max != null ? max.getValue() : 0.0D;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return AttributeSupplier.builder()
+                .add(ModAttributes.MECH_BEAM_DAMAGE.get())
+                .add(ModAttributes.MECH_MACHINEGUN_DAMAGE.get())
+                .add(ModAttributes.MECH_MISSILE_DAMAGE.get())
+                .add(ModAttributes.MECH_SABER_DAMAGE.get())
+                .add(ModAttributes.MECH_ENERGY.get(), 100.0D)
+                .add(ModAttributes.MECH_DASH_SPEED.get())
+                .add(ModAttributes.MECH_DASH_SIDE_SPEED.get())
+                .add(ModAttributes.MECH_EVASION_LEFT_SPEED.get())
+                .add(ModAttributes.MECH_EVASION_RIGHT_SPEED.get())
+                .add(ModAttributes.MECH_JUMP_POWER.get())
+                .add(ModAttributes.MECH_JUMP_SUSTAIN.get())
+                .add(ModAttributes.MECH_PILOT_ACCURACY.get())
+                .add(ModAttributes.MECH_PILOT_REACTION.get());
+    }
+
+    public double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(double energy) {
+        double max = getAttributeValue(ModAttributes.MECH_ENERGY.get());
+        this.energy = Math.min(energy, max);
+    }
+
+    public void addEnergy(double delta) {
+        setEnergy(this.energy + delta);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        double max = getAttributeValue(ModAttributes.MECH_ENERGY.get());
+        if (this.energy > max) {
+            this.energy = max;
+        }
     }
 
     /**
@@ -92,12 +139,91 @@ public class GundamMechEntity extends PomkotsVehicleBase {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
-        // TODO: read custom data
+    public void readAdditionalSaveData(CompoundTag tag) {
+        this.energy = tag.getDouble("Energy");
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-        // TODO: write custom data
+    public void addAdditionalSaveData(CompoundTag tag) {
+        tag.putDouble("Energy", this.energy);
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorSlots() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+    }
+
+    @Override
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
+    }
+
+    @Override
+    public boolean isSensitiveToWater() {
+        return false;
+    }
+
+    /**
+     * Retrieves the pilot's accuracy rating.
+     * <p>
+     * Currently returns a placeholder value until pilot stats are implemented.
+     *
+     * @return pilot accuracy from 0-1
+     */
+    protected float getPilotAccuracy() {
+        return 1.0f; // TODO: calculate actual pilot accuracy
+    }
+
+    /**
+     * Dash skid animation scaled by pilot accuracy.
+     */
+    protected void playDashSkidAnimation() {
+        float intensity = getPilotAccuracy();
+        // TODO: trigger dash skid animation with intensity
+    }
+
+    /**
+     * Hover lean animation scaled by pilot accuracy.
+     */
+    protected void playHoverLeanAnimation() {
+        float intensity = getPilotAccuracy();
+        // TODO: trigger hover lean animation with intensity
+    }
+
+    /**
+     * Cockpit reaction animation scaled by pilot accuracy.
+     */
+    protected void playCockpitReactionAnimation() {
+        float intensity = getPilotAccuracy();
+        // TODO: trigger cockpit reaction animation with intensity
+    }
+
+    /**
+     * Prototype overheat particle or sound effects.
+     */
+    protected void spawnOverheatEffects() {
+        float intensity = getPilotAccuracy();
+        // TODO: spawn overheat effects based on intensity
+    }
+
+    /**
+     * Prototype vertical thrust effects scaled by mech jump sustain.
+     */
+    protected void spawnVerticalThrustEffects() {
+        float sustain = getMechJumpSustain();
+        // TODO: spawn vertical thrust effects based on sustain
+    }
+
+    protected float getMechJumpSustain() {
+        return mechJumpSustain; // TODO: read from mech attributes
     }
 }

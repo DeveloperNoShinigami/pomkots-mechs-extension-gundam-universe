@@ -3,9 +3,9 @@
 This document tracks enhancement ideas that remain to be implemented in the Pomkots Mechs extension.
 
 ## Animation and Visual Effects
-- Dash skid, hover lean, and cockpit reaction animations that vary with pilot accuracy.
-- Vertical-thrust effects that scale with `mech_jump_sustain`, such as hover jets or exhaust plumes.
-- Overheat, malfunction, or vent sequences showing smoke, sparks, steam, or warning alarms when energy or jump sustain is pushed too high.
+- Dash skid, hover lean, and cockpit reaction animations that vary with pilot accuracy. Prototype hooks: `GundamMechEntity#playDashSkidAnimation`, `playHoverLeanAnimation`, and `playCockpitReactionAnimation`.
+- Vertical-thrust effects that scale with `mech_jump_sustain`, such as hover jets or exhaust plumes. Prototype hook: `GundamMechEntity#spawnVerticalThrustEffects`.
+- Overheat, malfunction, or vent sequences showing smoke, sparks, steam, or warning alarms when energy or jump sustain is pushed too high. Prototype hook: `GundamMechEntity#spawnOverheatEffects`.
 - Startup/shutdown, low-health warning, and other situational animations to enhance immersion.
 
 ## Combat and Movement Mechanics
