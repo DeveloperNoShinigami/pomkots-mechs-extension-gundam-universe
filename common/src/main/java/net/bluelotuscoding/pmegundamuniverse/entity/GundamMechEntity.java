@@ -1,30 +1,29 @@
 package net.bluelotuscoding.pmegundamuniverse.entity;
 
-import net.minecraft.core.particles.ParticleTypes;
+import grcmcs.minecraft.mods.pomkotsmechs.extension.entity.vehicle.PmgBaseEntity;
+import grcmcs.minecraft.mods.pomkotsmechs.client.input.DriverInput;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 /**
  * Base class for Gundam mechs added by the addon.
- * TODO: extend the core mod's PmgBaseEntity when available.
  */
-public class GundamMechEntity extends Entity implements GeoAnimatable {
-    private final AnimatableInstanceCache animationCache = GeckoLibUtil.createInstanceCache(this);
+public class GundamMechEntity extends PmgBaseEntity {
+    private static final EntityDataAccessor<Integer> ENERGY =
+            SynchedEntityData.defineId(GundamMechEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> HAS_PILOT =
+            SynchedEntityData.defineId(GundamMechEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> EQUIPMENT =
+            SynchedEntityData.defineId(GundamMechEntity.class, EntityDataSerializers.STRING);
 
-    public GundamMechEntity(EntityType<? extends Entity> type, Level level) {
+    public GundamMechEntity(EntityType<? extends PmgBaseEntity> type, Level level) {
         super(type, level);
         AttributeInstance max = this.getAttribute(ModAttributes.MECH_ENERGY.get());
         this.energy = max != null ? max.getValue() : 0.0D;
@@ -133,110 +132,92 @@ public class GundamMechEntity extends Entity implements GeoAnimatable {
 
     @Override
     protected void defineSynchedData() {
-        // TODO: sync Gundam data
+        this.entityData.define(ENERGY, 0);
+        this.entityData.define(HAS_PILOT, false);
+        this.entityData.define(EQUIPMENT, "");
+    }
+
+    public int getEnergy() {
+        return this.entityData.get(ENERGY);
+    }
+
+    public void setEnergy(int energy) {
+        this.entityData.set(ENERGY, energy);
+    }
+
+    public boolean hasPilot() {
+        return this.entityData.get(HAS_PILOT);
+    }
+
+    public void setHasPilot(boolean value) {
+        this.entityData.set(HAS_PILOT, value);
+    }
+
+    public String getEquipment() {
+        return this.entityData.get(EQUIPMENT);
+    }
+
+    public void setEquipment(String equipment) {
+        this.entityData.set(EQUIPMENT, equipment);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
-        this.energy = tag.getDouble("Energy");
+        setEnergy(tag.getInt("Energy"));
+        setHasPilot(tag.getBoolean("HasPilot"));
+        setEquipment(tag.getString("Equipment"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
-        tag.putDouble("Energy", this.energy);
+        tag.putInt("Energy", getEnergy());
+        tag.putBoolean("HasPilot", hasPilot());
+        tag.putString("Equipment", getEquipment());
+    }
+
+    /**
+     * Register animation controllers for this mech.
+     */
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        super.registerControllers(controllers);
+    }
+
+    /**
+     * Attribute setup inherited from {@link PmgBaseEntity}.
+     */
+    public static AttributeSupplier.Builder createAttributes() {
+        return AttributeSupplier.builder()
+                .add(Attributes.MAX_HEALTH, 40.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D);
     }
 
     @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return Collections.emptyList();
+    protected void registerCombatActions() {
+        // No combat actions yet.
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
-        return ItemStack.EMPTY;
+    protected void applyPlayerInputWeaponsMainMode(DriverInput input) {
+        // Mech weapons not implemented yet.
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+    protected String getMechName() {
+        return "gundam_mech";
     }
 
     @Override
-    public HumanoidArm getMainArm() {
-        return HumanoidArm.RIGHT;
-    }
-
-    @Override
-    public boolean isSensitiveToWater() {
+    protected boolean useEnergy(int amount) {
+        if (getEnergy() >= amount) {
+            setEnergy(getEnergy() - amount);
+            return true;
+        }
         return false;
     }
 
-    /**
-     * Retrieves the pilot's accuracy rating.
-     * <p>
-     * Currently returns a placeholder value until pilot stats are implemented.
-     *
-     * @return pilot accuracy from 0-1
-     */
-    protected float getPilotAccuracy() {
-        return 1.0f; // TODO: calculate actual pilot accuracy
-    }
-
-    /**
-     * Dash skid animation scaled by pilot accuracy.
-     */
-    protected void playDashSkidAnimation() {
-        float intensity = getPilotAccuracy();
-        // TODO: trigger dash skid animation with intensity
-    }
-
-    /**
-     * Hover lean animation scaled by pilot accuracy.
-     */
-    protected void playHoverLeanAnimation() {
-        float intensity = getPilotAccuracy();
-        // TODO: trigger hover lean animation with intensity
-    }
-
-    /**
-     * Cockpit reaction animation scaled by pilot accuracy.
-     */
-    protected void playCockpitReactionAnimation() {
-        float intensity = getPilotAccuracy();
-        // TODO: trigger cockpit reaction animation with intensity
-    }
-
-    /**
-     * Prototype overheat particle or sound effects.
-     */
-    protected void spawnOverheatEffects() {
-        float intensity = getPilotAccuracy();
-        // TODO: spawn overheat effects based on intensity
-    }
-
-    /**
-     * Prototype vertical thrust effects scaled by mech jump sustain.
-     */
-    protected void spawnVerticalThrustEffects() {
-        float sustain = getMechJumpSustain();
-        // TODO: spawn vertical thrust effects based on sustain
-    }
-
-    protected float getMechJumpSustain() {
-        return mechJumpSustain; // TODO: read from mech attributes
-    }
-
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        // TODO: add animation controllers
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animationCache;
-    }
-
-    @Override
-    public double getTick(Object animatable) {
-        return tickCount;
+    protected void setupProperties() {
+        // Properties can be set here when needed.
     }
 }

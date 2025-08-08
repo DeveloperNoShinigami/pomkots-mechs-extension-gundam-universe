@@ -192,6 +192,5 @@ What went wrong:
 Improvements:
 ```
 
-## Recent Insights
-- Added placeholder `PomkotsVehicleBase` with an energy gauge to support mech ability tests.
-- Implemented `GundamMechEntity` ability hooks that consume energy and trigger simple effects.
+## Additional Insights
+- Ensure entity data fields are covered by serialization tests to catch persistence issues early.
