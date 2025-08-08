@@ -2,7 +2,7 @@ package net.bluelotuscoding.pmegundamuniverse;
 
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import net.bluelotuscoding.pmegundamuniverse.client.renderer.MyMechRenderer;
-import net.bluelotuscoding.pmegundamuniverse.entity.ModEntities;
+import net.bluelotuscoding.pmegundamuniverse.entity.PmegundamuniverseEntities;
 
 /**
  * Client-side initialization for Pomkots Mechs - Gundam Universe.
@@ -12,6 +12,6 @@ public final class PmegundamuniverseClient {
     }
 
     public static void init() {
-        EntityRendererRegistry.register(ModEntities.MY_MECH, MyMechRenderer::new);
+        EntityRendererRegistry.register(() -> PmegundamuniverseEntities.GUNDAM_MECH, MyMechRenderer::new);
     }
 }

@@ -12,21 +12,19 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 /**
  * Base class for Gundam mechs added by the addon.
  * TODO: extend the core mod's PmgBaseEntity when available.
  */
-public class GundamMechEntity extends PomkotsVehicleBase {
-    private static final float DASH_COST = 10.0F;
-    private static final float DASH_SIDE_COST = 8.0F;
-    private static final float JUMP_COST = 12.0F;
-    private static final float COCKPIT_COST = 2.0F;
+public class GundamMechEntity extends Entity implements GeoAnimatable {
+    private final AnimatableInstanceCache animationCache = GeckoLibUtil.createInstanceCache(this);
 
-    private boolean cockpitOpen;
-
-    public GundamMechEntity(EntityType<? extends PomkotsVehicleBase> type, Level level) {
+    public GundamMechEntity(EntityType<? extends Entity> type, Level level) {
         super(type, level);
         AttributeInstance max = this.getAttribute(ModAttributes.MECH_ENERGY.get());
         this.energy = max != null ? max.getValue() : 0.0D;
@@ -225,5 +223,20 @@ public class GundamMechEntity extends PomkotsVehicleBase {
 
     protected float getMechJumpSustain() {
         return mechJumpSustain; // TODO: read from mech attributes
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        // TODO: add animation controllers
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return animationCache;
+    }
+
+    @Override
+    public double getTick(Object animatable) {
+        return tickCount;
     }
 }
