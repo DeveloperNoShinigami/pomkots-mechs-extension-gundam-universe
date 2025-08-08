@@ -31,7 +31,7 @@
     "java": ">=17",
     "architectury": ">=9.2.14",
     "geckolib": ">=4.4.9",
-    "pomkotsmechs": ">=0.0.1-alpha.4",
+    "pomkotsmechsextension": ">=0.0.1-alpha.4",
     "leawind_third_person": ">=2.1.0",
     "fabric-api": "*"
   },

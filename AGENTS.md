@@ -171,7 +171,10 @@ When turning a substantial fork into a lean addon that depends on an upstream mo
 - After each task, note what went well and what could be improved. Update this guide with any new insights.
 - Continuously refine workflows so future tasks are executed more efficiently.
 - Maintain an internal log of lessons learned and share them through code comments or documentation.
-- 
+
+## Recent Insights
+- Prototype hooks for pilot accuracy-driven animations and mech effects were added. Integrate these with real statistics and rendering systems in future work.
+
 ## Fork Audit
 Track deviations from the upstream repository with `docs/fork_audit.csv`. Regenerate it after syncing with upstream using:
 ```
@@ -188,3 +191,6 @@ What went well:
 What went wrong:
 Improvements:
 ```
+
+## Additional Insights
+- Ensure entity data fields are covered by serialization tests to catch persistence issues early.

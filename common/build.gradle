@@ -32,8 +32,15 @@ dependencies {
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 
     implementation(name: 'pomkotsmechs-fabric-0.0.1-alpha.4-dev-shadow', ext: 'jar')  // 'libs/A.jar' を依存関係に追加
+    implementation files("$rootProject.projectDir/pomkotsmechsextension-forge-0.0.1-alpha.4.jar")
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
