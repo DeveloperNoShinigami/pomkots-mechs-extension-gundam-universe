@@ -14,5 +14,6 @@ public final class Pmegundamuniverse {
     public static void init() {
         ModAttributes.init();
         // TODO: register Gundam mechs and related content here
+
     }
 }

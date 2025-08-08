@@ -49,7 +49,7 @@ ordering = "AFTER"
 side = "CLIENT"
 
 [[dependencies.pmegundamuniverse]]
-modId = "pomkotsmechs"
+modId = "pomkotsmechsextension"
 mandatory = true
 versionRange = "[0.0.1-alpha.4,)"
 ordering = "AFTER"
