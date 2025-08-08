@@ -1,0 +1,14 @@
+{
+  "animations": {
+    "shoot": {}, "shootUpperBody": {},
+    "shoot1": {}, "shoot2": {}, "shoot1_upper": {}, "shoot2_upper": {},
+    "shootL1": {}, "shootL2": {}, "shootL1_upper": {}, "shootL2_upper": {},
+    "saber": {}, "saberUpperBody": {},
+    "saber1": {}, "saber2": {}, "saber3": {},
+    "saber1_upper": {}, "saber2_upper": {}, "saber3_upper": {},
+    "bazooka": {}, "bazooka_upper": {},
+    "missile": {}, "missileUpperBody": {},
+    "gatling1": {}, "gatling2": {},
+    "vz": {}, "vz_upper": {}
+  }
+}
